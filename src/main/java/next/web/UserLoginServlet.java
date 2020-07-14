@@ -32,7 +32,6 @@ public class UserLoginServlet extends HttpServlet {
             session. setAttribute("user", user);
         }
 
-        final RequestDispatcher rd = req.getRequestDispatcher("/user/index.jsp");
-        rd.forward(req, resp);
+        resp.sendRedirect("/");
     }
 }
