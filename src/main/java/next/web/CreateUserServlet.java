@@ -25,6 +25,6 @@ public class CreateUserServlet extends HttpServlet {
         User user = new User(req);
         log.debug("user : {}", user);
         DataBase.addUser(user);
-        resp.sendRedirect("/user/list");
+        resp.sendRedirect("/");
     }
 }

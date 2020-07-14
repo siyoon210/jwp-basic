@@ -18,27 +18,24 @@
 <%@ include file="../nav/nav.jsp" %>
 
 <div class="container" id="main">
-    <div class="col-md-10 col-md-offset-1">
+    <div class="col-md-6 col-md-offset-3">
         <div class="panel panel-default">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>#</th> <th>사용자 아이디</th> <th>이름</th> <th>이메일</th><th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <c:forEach items="${users}" var="user" varStatus="status">
-                    <tr>
-                        <th scope="row">${status.count}</th>
-                        <td>${user.userId}</td>
-                        <td>${user.name}</td>
-                        <td>${user.email}</td>
-                        <td><a href="/user/update/${user.userId}" class="btn btn-success" role="button">수정</a>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
+            <div class="panel-heading"><h4>Profiles</h4></div>
+            <div class="panel-body">
+                <div class="well well-sm">
+                    <div class="media">
+                        <a class="thumbnail pull-left" href="#">
+                            <img class="media-object" src="../images/80-text.png">
+                        </a>
+                        <div class="media-body">
+                            <h4 class="media-heading">자바지기</h4>
+                            <p>
+                                <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-envelope"></span>&nbsp;javajigi@slipp.net</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -47,5 +44,5 @@
 <script src="../js/jquery-2.2.0.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/scripts.js"></script>
-</body>
+	</body>
 </html>
