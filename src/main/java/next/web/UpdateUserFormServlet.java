@@ -24,6 +24,7 @@ public class UpdateUserFormServlet extends HttpServlet {
         log.info("User ID : {}", userId);
         final User user = DataBase.findUserById(userId);
         log.info("User : {}", user.toString());
+        req.setAttribute("user", user);
         final RequestDispatcher requestDispatcher = req.getRequestDispatcher("/user/update.jsp");
         requestDispatcher.forward(req, resp);
     }
