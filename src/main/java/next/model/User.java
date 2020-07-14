@@ -1,5 +1,7 @@
 package next.model;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class User {
     private String userId;
     private String password;
@@ -11,6 +13,19 @@ public class User {
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    public User(HttpServletRequest req) {
+       this.userId = req.getParameter("userId");
+       this.password = req.getParameter("password");
+       this.name = req.getParameter("name");
+       this.email = req.getParameter("email");
+    }
+
+    public void modifyInfo(HttpServletRequest req) {
+        this.password = req.getParameter("password");
+        this.name = req.getParameter("name");
+        this.email = req.getParameter("email");
     }
 
     public String getUserId() {
