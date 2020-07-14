@@ -72,11 +72,8 @@
 <div class="container" id="main">
    <div class="col-md-6 col-md-offset-3">
       <div class="panel panel-default content-main">
-          <form name="question" method="post" action="/user/create">
-              <div class="form-group">
-                  <label for="userId">사용자 아이디</label>
-                  <input class="form-control" id="userId" name="userId" value="${user.userId}" placeholder="User ID">
-              </div>
+          <form name="question" method="post" action="/user/update">
+              <input type="hidden" id="userId" name="userId" value="${user.userId}">
               <div class="form-group">
                   <label for="password">비밀번호</label>
                   <input type="password" class="form-control" id="password" name="password" value="${user.password}" placeholder="Password">
@@ -89,7 +86,7 @@
                   <label for="email">이메일</label>
                   <input type="email" class="form-control" id="email" name="email" value="${user.email}" placeholder="Email">
               </div>
-              <button type="submit" class="btn btn-success clearfix pull-right">회원가입</button>
+              <button type="submit" class="btn btn-success clearfix pull-right">수정</button>
               <div class="clearfix" />
           </form>
         </div>
