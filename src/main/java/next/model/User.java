@@ -1,7 +1,5 @@
 package next.model;
 
-import javax.servlet.http.HttpServletRequest;
-
 public class User {
     private String userId;
     private String password;
@@ -13,19 +11,6 @@ public class User {
         this.password = password;
         this.name = name;
         this.email = email;
-    }
-
-    public User(HttpServletRequest req) {
-       this.userId = req.getParameter("userId");
-       this.password = req.getParameter("password");
-       this.name = req.getParameter("name");
-       this.email = req.getParameter("email");
-    }
-
-    public void modifyInfo(HttpServletRequest req) {
-        this.password = req.getParameter("password");
-        this.name = req.getParameter("name");
-        this.email = req.getParameter("email");
     }
 
     public String getUserId() {
@@ -42,6 +27,24 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public void update(User updateUser) {
+        this.password = updateUser.password;
+        this.name = updateUser.name;
+        this.email = updateUser.email;
+    }
+
+    public boolean matchPassword(String password) {
+        if (password == null) {
+            return false;
+        }
+
+        return this.password.equals(password);
+    }
+
+    public boolean isSameUser(User user) {
+        return userId.equals(user.userId);
     }
 
     @Override
@@ -83,11 +86,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "userId='" + userId + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+        return "User [userId=" + userId + ", name=" + name + ", email=" + email + "]";
     }
 }
