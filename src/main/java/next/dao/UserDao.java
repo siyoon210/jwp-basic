@@ -7,23 +7,19 @@ import java.sql.ResultSet;
 import java.util.List;
 
 public class UserDao {
-    public void insert(User user) {
-        final JdbcTemplate<User> jdbcTemplate = new JdbcTemplate<>();
+    private final JdbcTemplate<User> jdbcTemplate = new JdbcTemplate<>();
 
+    public void insert(User user) {
         jdbcTemplate.update("INSERT INTO USERS VALUES (?, ?, ?, ?)",
                 user.getUserId(), user.getPassword(), user.getName(), user.getEmail());
     }
 
     public void update(User user) {
-        final JdbcTemplate<User> jdbcTemplate = new JdbcTemplate<>();
-
         jdbcTemplate.update("UPDATE USERS SET password = ?, name = ?, email = ? WHERE userId = ?",
                 user.getPassword(), user.getName(), user.getEmail(), user.getUserId());
     }
 
     public List<User> findAll() {
-        final JdbcTemplate<User> jdbcTemplate = new JdbcTemplate<>();
-
         RowMapper<User> rowMapper = (ResultSet rs) -> new User(rs.getString("userId"),
                 rs.getString("password"),
                 rs.getString("name"),
@@ -33,8 +29,6 @@ public class UserDao {
     }
 
     public User findByUserId(String userId) {
-        final JdbcTemplate<User> jdbcTemplate = new JdbcTemplate<>();
-
         RowMapper<User> rowMapper = (ResultSet rs) -> new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
                 rs.getString("email"));
 
