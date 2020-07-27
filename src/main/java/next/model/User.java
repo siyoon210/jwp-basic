@@ -1,7 +1,17 @@
 package next.model;
 
+import next.dao.JdbcTemplate;
+import next.exception.JdbcTemplateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class User {
-    private String userId;
+    private static final Logger log = LoggerFactory.getLogger(JdbcTemplate.class);
+
+    private final String userId;
     private String password;
     private String name;
     private String email;
@@ -11,6 +21,18 @@ public class User {
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    public User(ResultSet rs) {
+        try {
+            this.userId = rs.getString("userId");
+            this.password = rs.getString("password");
+            this.name = rs.getString("name");
+            this.email = rs.getString("email");
+        } catch (SQLException e) {
+            log.error("SQLException!! {}", e.getMessage());
+            throw new JdbcTemplateException();
+        }
     }
 
     public String getUserId() {

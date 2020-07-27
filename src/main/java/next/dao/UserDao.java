@@ -20,18 +20,12 @@ public class UserDao {
     }
 
     public List<User> findAll() {
-        RowMapper<User> rowMapper = (ResultSet rs) -> new User(rs.getString("userId"),
-                rs.getString("password"),
-                rs.getString("name"),
-                rs.getString("email"));
-
-        return jdbcTemplate.query("SELECT userId, password, name, email FROM USERS", rowMapper);
+        return jdbcTemplate.query("SELECT userId, password, name, email FROM USERS",
+                User::new);
     }
 
     public User findByUserId(String userId) {
-        RowMapper<User> rowMapper = (ResultSet rs) -> new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
-                rs.getString("email"));
-
-        return jdbcTemplate.queryForObject("SELECT userId, password, name, email FROM USERS WHERE userid=?", rowMapper, userId);
+        return jdbcTemplate.queryForObject("SELECT userId, password, name, email FROM USERS WHERE userid=?",
+                User::new, userId);
     }
 }
