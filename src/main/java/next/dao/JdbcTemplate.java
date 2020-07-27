@@ -12,13 +12,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class JdbcTemplate<T> {
+public class JdbcTemplate<T> {
     private static final Logger log = LoggerFactory.getLogger(JdbcTemplate.class);
 
-    public void update(String sql) {
+    public void update(String sql, PreparedStatementSetter pstmtSetter) {
         try (Connection con = ConnectionManager.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            this.setValues(pstmt);
+            pstmtSetter.setValues(pstmt);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             log.error("SQLException!! {}", e.getMessage());
@@ -26,14 +26,14 @@ public abstract class JdbcTemplate<T> {
         }
     }
 
-    public List<T> query(String sql) {
+    public List<T> query(String sql, PreparedStatementSetter pstmtSetter, RowMapper<T> rowMapper) {
         try (Connection con = ConnectionManager.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            this.setValues(pstmt);
+            pstmtSetter.setValues(pstmt);
             final ResultSet rs = pstmt.executeQuery();
             List<T> results = new ArrayList<>();
             while (rs.next()) {
-                final T o = mapRow(rs);
+                final T o = rowMapper.mapRow(rs);
                 results.add(o);
             }
             return results;
@@ -43,13 +43,13 @@ public abstract class JdbcTemplate<T> {
         }
     }
 
-    public T queryForObject(String sql) {
+    public T queryForObject(String sql, PreparedStatementSetter pstmtSetter, RowMapper<T> rowMapper) {
         try (Connection con = ConnectionManager.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            this.setValues(pstmt);
+            pstmtSetter.setValues(pstmt);
             final ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return mapRow(rs);
+                return rowMapper.mapRow(rs);
             }
             return null;
         } catch (SQLException e) {
@@ -57,7 +57,4 @@ public abstract class JdbcTemplate<T> {
             throw new JdbcTemplateException();
         }
     }
-
-    abstract void setValues(PreparedStatement pstmt) throws SQLException;
-    abstract T mapRow(ResultSet rs) throws SQLException;
 }
