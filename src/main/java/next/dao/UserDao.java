@@ -11,7 +11,7 @@ import core.jdbc.ConnectionManager;
 import next.model.User;
 
 public class UserDao {
-    public void insert(User user) throws SQLException {
+    public void insert(User user) {
         final JdbcTemplate insertJdbcTemplate = new JdbcTemplate() {
             @Override
             void setValues(PreparedStatement pstmt) throws SQLException {
@@ -25,7 +25,7 @@ public class UserDao {
         insertJdbcTemplate.update("INSERT INTO USERS VALUES (?, ?, ?, ?)");
     }
 
-    public void update(User user) throws SQLException {
+    public void update(User user) {
         final JdbcTemplate jdbcTemplate = new JdbcTemplate() {
             @Override
             void setValues(PreparedStatement pstmt) throws SQLException {
