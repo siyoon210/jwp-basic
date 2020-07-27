@@ -2,8 +2,6 @@ package next.dao;
 
 import core.jdbc.ConnectionManager;
 import next.exception.JdbcTemplateException;
-import next.model.User;
-import org.h2.jdbc.JdbcSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
