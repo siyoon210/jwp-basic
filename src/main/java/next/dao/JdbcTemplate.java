@@ -26,7 +26,19 @@ public class JdbcTemplate<T> {
         }
     }
 
-    public List<T> query(String sql, PreparedStatementSetter pstmtSetter, RowMapper<T> rowMapper) {
+    public void update(String sql, Object... objects) {
+        update(sql, createPreparedStatementSetter(objects));
+    }
+
+    public PreparedStatementSetter createPreparedStatementSetter(Object... objects) {
+        return (PreparedStatement pstmt) -> {
+            for (int i = 1; i <= objects.length; i++) {
+                pstmt.setObject(i, objects[i - 1]);
+            }
+        };
+    }
+
+    public List<T> query(String sql, RowMapper<T> rowMapper, PreparedStatementSetter pstmtSetter) {
         try (Connection con = ConnectionManager.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmtSetter.setValues(pstmt);
@@ -43,7 +55,11 @@ public class JdbcTemplate<T> {
         }
     }
 
-    public T queryForObject(String sql, PreparedStatementSetter pstmtSetter, RowMapper<T> rowMapper) {
+    public List<T> query(String sql, RowMapper<T> rowMapper, Object... objects) {
+        return query(sql, rowMapper, createPreparedStatementSetter(objects));
+    }
+
+    public T queryForObject(String sql, RowMapper<T> rowMapper, PreparedStatementSetter pstmtSetter) {
         try (Connection con = ConnectionManager.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmtSetter.setValues(pstmt);
@@ -56,5 +72,9 @@ public class JdbcTemplate<T> {
             log.error("SQLException!! {}", e.getMessage());
             throw new JdbcTemplateException();
         }
+    }
+
+    public T queryForObject(String sql, RowMapper<T> rowMapper, Object... objects) {
+        return queryForObject(sql, rowMapper, createPreparedStatementSetter(objects));
     }
 }
