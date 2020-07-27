@@ -9,7 +9,7 @@ import java.util.List;
 
 public class UserDao {
     public void insert(User user) {
-        final JdbcTemplate insertJdbcTemplate = new JdbcTemplate() {
+        final JdbcTemplate<User> insertJdbcTemplate = new JdbcTemplate<User>() {
             @Override
             void setValues(PreparedStatement pstmt) throws SQLException {
                 pstmt.setString(1, user.getUserId());
@@ -17,13 +17,18 @@ public class UserDao {
                 pstmt.setString(3, user.getName());
                 pstmt.setString(4, user.getEmail());
             }
+
+            @Override
+            User mapRow(ResultSet rs) {
+                return null;
+            }
         };
 
         insertJdbcTemplate.update("INSERT INTO USERS VALUES (?, ?, ?, ?)");
     }
 
     public void update(User user) {
-        final JdbcTemplate jdbcTemplate = new JdbcTemplate() {
+        final JdbcTemplate<User> jdbcTemplate = new JdbcTemplate<User>() {
             @Override
             void setValues(PreparedStatement pstmt) throws SQLException {
                 pstmt.setString(1, user.getPassword());
@@ -31,13 +36,18 @@ public class UserDao {
                 pstmt.setString(3, user.getEmail());
                 pstmt.setString(4, user.getUserId());
             }
+
+            @Override
+            User mapRow(ResultSet rs) {
+                return null;
+            }
         };
 
         jdbcTemplate.update("UPDATE USERS SET password = ?, name = ?, email = ? WHERE userId = ?");
     }
 
     public List<User> findAll() {
-        final SelectJdbcTemplate<User> selectJdbcTemplate = new SelectJdbcTemplate<User>() {
+        final JdbcTemplate<User> jdbcTemplate = new JdbcTemplate<User>() {
             @Override
             void setValues(PreparedStatement pstmt) {
             }
@@ -51,11 +61,11 @@ public class UserDao {
             }
         };
 
-        return selectJdbcTemplate.query("SELECT userId, password, name, email FROM USERS");
+        return jdbcTemplate.query("SELECT userId, password, name, email FROM USERS");
     }
 
     public User findByUserId(String userId) {
-        final SelectJdbcTemplate<User> selectJdbcTemplate = new SelectJdbcTemplate<User>() {
+        final JdbcTemplate<User> jdbcTemplate = new JdbcTemplate<User>() {
             @Override
             void setValues(PreparedStatement pstmt) throws SQLException {
                 pstmt.setString(1, userId);
@@ -68,6 +78,6 @@ public class UserDao {
             }
         };
 
-        return selectJdbcTemplate.queryForObject("SELECT userId, password, name, email FROM USERS WHERE userid=?");
+        return jdbcTemplate.queryForObject("SELECT userId, password, name, email FROM USERS WHERE userid=?");
     }
 }
