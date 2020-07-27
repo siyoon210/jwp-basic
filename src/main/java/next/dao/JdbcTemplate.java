@@ -8,26 +8,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public abstract class JdbcTemplate {
-    public void update(User user) throws SQLException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        try {
-            con = ConnectionManager.getConnection();
-            final String sql = this.createQuery();
-            pstmt = con.prepareStatement(sql);
-            this.setValues(user, pstmt);
+    public void update(String sql) throws SQLException {
+        try (Connection con = ConnectionManager.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            this.setValues(pstmt);
             pstmt.executeUpdate();
-        } finally {
-            if (pstmt != null) {
-                pstmt.close();
-            }
-
-            if (con != null) {
-                con.close();
-            }
         }
     }
 
-    abstract void setValues(User user, PreparedStatement pstmt) throws SQLException;
-    abstract String createQuery();
+    abstract void setValues(PreparedStatement pstmt) throws SQLException;
 }
