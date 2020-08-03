@@ -1,73 +1,53 @@
 package next.dao;
 
-import next.model.User;
-
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import next.model.User;
+import core.jdbc.JdbcTemplate;
+import core.jdbc.RowMapper;
+
 public class UserDao {
     public void insert(User user) {
-        final JdbcTemplate insertJdbcTemplate = new JdbcTemplate() {
-            @Override
-            void setValues(PreparedStatement pstmt) throws SQLException {
-                pstmt.setString(1, user.getUserId());
-                pstmt.setString(2, user.getPassword());
-                pstmt.setString(3, user.getName());
-                pstmt.setString(4, user.getEmail());
-            }
-        };
-
-        insertJdbcTemplate.update("INSERT INTO USERS VALUES (?, ?, ?, ?)");
-    }
-
-    public void update(User user) {
-        final JdbcTemplate jdbcTemplate = new JdbcTemplate() {
-            @Override
-            void setValues(PreparedStatement pstmt) throws SQLException {
-                pstmt.setString(1, user.getPassword());
-                pstmt.setString(2, user.getName());
-                pstmt.setString(3, user.getEmail());
-                pstmt.setString(4, user.getUserId());
-            }
-        };
-
-        jdbcTemplate.update("UPDATE USERS SET password = ?, name = ?, email = ? WHERE userId = ?");
-    }
-
-    public List<User> findAll() {
-        final SelectJdbcTemplate<User> selectJdbcTemplate = new SelectJdbcTemplate<User>() {
-            @Override
-            void setValues(PreparedStatement pstmt) {
-            }
-
-            @Override
-            User mapRow(ResultSet rs) throws SQLException {
-                return new User(rs.getString("userId"),
-                        rs.getString("password"),
-                        rs.getString("name"),
-                        rs.getString("email"));
-            }
-        };
-
-        return selectJdbcTemplate.query("SELECT userId, password, name, email FROM USERS");
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, user.getUserId(), user.getPassword(), user.getName(), user.getEmail());
     }
 
     public User findByUserId(String userId) {
-        final SelectJdbcTemplate<User> selectJdbcTemplate = new SelectJdbcTemplate<User>() {
-            @Override
-            void setValues(PreparedStatement pstmt) throws SQLException {
-                pstmt.setString(1, userId);
-            }
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
 
+        RowMapper<User> rm = new RowMapper<User>() {
             @Override
-            User mapRow(ResultSet rs) throws SQLException {
+            public User mapRow(ResultSet rs) throws SQLException {
                 return new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
                         rs.getString("email"));
             }
         };
 
-        return selectJdbcTemplate.queryForObject("SELECT userId, password, name, email FROM USERS WHERE userid=?");
+        return jdbcTemplate.queryForObject(sql, rm, userId);
+    }
+
+    public List<User> findAll() throws SQLException {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String sql = "SELECT userId, password, name, email FROM USERS";
+
+        RowMapper<User> rm = new RowMapper<User>() {
+            @Override
+            public User mapRow(ResultSet rs) throws SQLException {
+                return new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
+                        rs.getString("email"));
+            }
+        };
+
+        return jdbcTemplate.query(sql, rm);
+    }
+
+    public void update(User user) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String sql = "UPDATE USERS set password = ?, name = ?, email = ? WHERE userId = ?";
+        jdbcTemplate.update(sql, user.getPassword(), user.getName(), user.getEmail(), user.getUserId());
     }
 }
