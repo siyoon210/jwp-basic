@@ -19,16 +19,16 @@ public class LoginController implements Controller {
         UserDao userDao = new UserDao();
         User user = userDao.findByUserId(userId);
         if (user == null) {
-            req.setAttribute("loginFailed", true);
-            return new ModelAndView(null, new JspView("/user/login.js"));
+            return new ModelAndView(new JspView("/user/login.js"))
+                    .addAttribute("loginFailed", true);
         }
         if (user.matchPassword(password)) {
             HttpSession session = req.getSession();
             session.setAttribute(UserSessionUtils.USER_SESSION_KEY, user);
-            return new ModelAndView(null, new JspView("redirect:/"));
+            return new ModelAndView(new JspView("redirect:/"));
         } else {
-            req.setAttribute("loginFailed", true);
-            return new ModelAndView(null, new JspView("/user/login.jsp"));
+            return new ModelAndView(new JspView("/user/login.jsp"))
+                    .addAttribute("loginFailed", true);
         }
     }
 }

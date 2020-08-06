@@ -18,7 +18,8 @@ public class ProfileController implements Controller {
         if (user == null) {
             throw new NullPointerException("사용자를 찾을 수 없습니다.");
         }
-        req.setAttribute("user", user);
-        return new ModelAndView(null, new JspView("/user/profile.jsp"));
+
+        return new ModelAndView(new JspView("/user/profile.jsp"))
+                .addAttribute("user", user);
     }
 }

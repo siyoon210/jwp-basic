@@ -14,6 +14,6 @@ public class LogoutController implements Controller {
     public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         HttpSession session = req.getSession();
         session.removeAttribute(UserSessionUtils.USER_SESSION_KEY);
-        return new ModelAndView(null, new JspView("redirect:/"));
+        return new ModelAndView(new JspView("redirect:/"));
     }
 }
