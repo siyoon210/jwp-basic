@@ -16,9 +16,9 @@ function addAnswer(e) {
   });
 }
 
-function onSuccess(json, status){
+function onSuccess(resp, status){
   var answerTemplate = $("#answerTemplate").html();
-  var template = answerTemplate.format(json.writer, new Date(json.createdDate), json.contents, json.answerId, json.answerId);
+  var template = answerTemplate.format(resp.savedAnswer.writer, new Date(resp.savedAnswer.createdDate), resp.savedAnswer.contents, resp.savedAnswer.answerId, resp.savedAnswer.answerId);
   $(".qna-comment-slipp-articles").prepend(template);
 }
 
