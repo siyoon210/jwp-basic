@@ -8,19 +8,17 @@ import next.dao.UserDao;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ListUserController implements Controller {
     @Override
     public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         if (!UserSessionUtils.isLogined(req.getSession())) {
-            return new ModelAndView(null, new JspView("redirect:/users/loginForm"));
+            return new ModelAndView(new JspView("redirect:/users/loginForm"));
         }
 
         UserDao userDao = new UserDao();
-        Map<String, Object> model = new HashMap<>();
-        model.put("users", userDao.findAll());
-        return new ModelAndView(model, new JspView("/user/list.jsp"));
+
+        return new ModelAndView(new JspView("/user/list.jsp"))
+                .addAttribute("users", userDao.findAll());
     }
 }

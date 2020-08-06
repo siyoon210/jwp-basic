@@ -22,6 +22,6 @@ public class CreateUserController implements Controller {
 
         UserDao userDao = new UserDao();
         userDao.insert(user);
-        return new ModelAndView(null, new JspView("redirect:/"));
+        return new ModelAndView(new JspView("redirect:/"));
     }
 }

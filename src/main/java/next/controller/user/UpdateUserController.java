@@ -27,6 +27,6 @@ public class UpdateUserController implements Controller {
                 req.getParameter("email"));
         log.debug("Update User : {}", updateUser);
         user.update(updateUser);
-        return new ModelAndView(null, new JspView("redirect:/"));
+        return new ModelAndView(new JspView("redirect:/"));
     }
 }

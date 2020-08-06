@@ -4,7 +4,6 @@ import core.mvc.Controller;
 import core.mvc.modelandview.ModelAndView;
 import core.mvc.view.JsonView;
 import next.dao.AnswerDao;
-import next.model.Result;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +16,7 @@ public class DeleteAnswerController implements Controller {
 
         answerDao.delete(answerId);
 
-        return new ModelAndView(null, new JsonView(Result.ok()));
+        return new ModelAndView(new JsonView());
 
     }
 }

@@ -18,6 +18,6 @@ public class ForwardController implements Controller {
 
     @Override
     public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        return new ModelAndView(null, new JspView(forwardUrl));
+        return new ModelAndView(new JspView(forwardUrl));
     }
 }
