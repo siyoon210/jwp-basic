@@ -5,6 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 public class JspView implements View {
     private static final String DEFAULT_REDIRECT_PREFIX = "redirect:";
@@ -16,7 +17,8 @@ public class JspView implements View {
     }
 
     @Override
-    public void render(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public void render(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> model) throws Exception {
+        model.forEach(req::setAttribute);
         move(url, req, resp);
     }
 

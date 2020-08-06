@@ -1,8 +1,8 @@
 package next.controller.qna;
 
 import core.mvc.Controller;
+import core.mvc.modelandview.ModelAndView;
 import core.mvc.view.JsonView;
-import core.mvc.view.View;
 import next.dao.AnswerDao;
 import next.model.Answer;
 import org.slf4j.Logger;
@@ -18,7 +18,7 @@ public class AddAnswerController implements Controller {
     private static final Logger log = LoggerFactory.getLogger(AddAnswerController.class);
 
     @Override
-    public View execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         Answer answer = new Answer(req.getParameter("writer"), req.getParameter("contents"),
                 Long.parseLong(req.getParameter("questionId")));
         log.debug("answer : {}", answer);
@@ -26,7 +26,7 @@ public class AddAnswerController implements Controller {
         AnswerDao answerDao = new AnswerDao();
         Answer savedAnswer = answerDao.insert(answer);
 
-        return new JsonView(savedAnswer);
+        return new ModelAndView(null, new JsonView(savedAnswer));
     }
 
     private Map<String, Object> createModel(HttpServletRequest req) {
