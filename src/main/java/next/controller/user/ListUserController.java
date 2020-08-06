@@ -1,23 +1,26 @@
 package next.controller.user;
 
 import core.mvc.Controller;
+import core.mvc.modelandview.ModelAndView;
 import core.mvc.view.JspView;
-import core.mvc.view.View;
 import next.controller.UserSessionUtils;
 import next.dao.UserDao;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ListUserController implements Controller {
     @Override
-    public View execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         if (!UserSessionUtils.isLogined(req.getSession())) {
-            return new JspView("redirect:/users/loginForm");
+            return new ModelAndView(null, new JspView("redirect:/users/loginForm"));
         }
 
         UserDao userDao = new UserDao();
-        req.setAttribute("users", userDao.findAll());
-        return new JspView("/user/list.jsp");
+        Map<String, Object> model = new HashMap<>();
+        model.put("users", userDao.findAll());
+        return new ModelAndView(model, new JspView("/user/list.jsp"));
     }
 }

@@ -1,8 +1,8 @@
 package next.controller.user;
 
 import core.mvc.Controller;
+import core.mvc.modelandview.ModelAndView;
 import core.mvc.view.JspView;
-import core.mvc.view.View;
 import next.controller.UserSessionUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,9 +11,9 @@ import javax.servlet.http.HttpSession;
 
 public class LogoutController implements Controller {
     @Override
-    public View execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         HttpSession session = req.getSession();
         session.removeAttribute(UserSessionUtils.USER_SESSION_KEY);
-        return new JspView("redirect:/");
+        return new ModelAndView(null, new JspView("redirect:/"));
     }
 }

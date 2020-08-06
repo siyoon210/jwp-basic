@@ -1,8 +1,8 @@
 package next.controller.qna;
 
 import core.mvc.Controller;
+import core.mvc.modelandview.ModelAndView;
 import core.mvc.view.JsonView;
-import core.mvc.view.View;
 import next.dao.AnswerDao;
 import next.model.Result;
 
@@ -11,12 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 
 public class DeleteAnswerController implements Controller {
     @Override
-    public View execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         Long answerId = Long.parseLong(req.getParameter("answerId"));
         AnswerDao answerDao = new AnswerDao();
 
         answerDao.delete(answerId);
 
-        return new JsonView(Result.ok());
+        return new ModelAndView(null, new JsonView(Result.ok()));
+
     }
 }

@@ -1,8 +1,8 @@
 package next.controller.user;
 
 import core.mvc.Controller;
+import core.mvc.modelandview.ModelAndView;
 import core.mvc.view.JspView;
-import core.mvc.view.View;
 import next.dao.UserDao;
 import next.model.User;
 import org.slf4j.Logger;
@@ -15,13 +15,13 @@ public class CreateUserController implements Controller {
     private static final Logger log = LoggerFactory.getLogger(CreateUserController.class);
 
     @Override
-    public View execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         User user = new User(req.getParameter("userId"), req.getParameter("password"), req.getParameter("name"),
                 req.getParameter("email"));
         log.debug("User : {}", user);
 
         UserDao userDao = new UserDao();
         userDao.insert(user);
-        return new JspView("redirect:/");
+        return new ModelAndView(null, new JspView("redirect:/"));
     }
 }
