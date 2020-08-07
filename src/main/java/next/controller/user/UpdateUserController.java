@@ -2,7 +2,6 @@ package next.controller.user;
 
 import core.mvc.Controller;
 import core.mvc.modelandview.ModelAndView;
-import core.mvc.view.JspView;
 import next.controller.UserSessionUtils;
 import next.dao.UserDao;
 import next.model.User;
@@ -27,6 +26,7 @@ public class UpdateUserController implements Controller {
                 req.getParameter("email"));
         log.debug("Update User : {}", updateUser);
         user.update(updateUser);
-        return new ModelAndView(new JspView("redirect:/"));
+        return ModelAndView.builder()
+                .jspView("redirect:/");
     }
 }

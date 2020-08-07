@@ -2,7 +2,6 @@ package next.controller.user;
 
 import core.mvc.Controller;
 import core.mvc.modelandview.ModelAndView;
-import core.mvc.view.JspView;
 import next.dao.UserDao;
 import next.model.User;
 import org.slf4j.Logger;
@@ -22,6 +21,7 @@ public class CreateUserController implements Controller {
 
         UserDao userDao = new UserDao();
         userDao.insert(user);
-        return new ModelAndView(new JspView("redirect:/"));
+        return ModelAndView.builder()
+                .jspView("redirect:/");
     }
 }
