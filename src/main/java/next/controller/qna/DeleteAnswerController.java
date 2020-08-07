@@ -2,7 +2,6 @@ package next.controller.qna;
 
 import core.mvc.Controller;
 import core.mvc.modelandview.ModelAndView;
-import core.mvc.view.JsonView;
 import next.dao.AnswerDao;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +15,7 @@ public class DeleteAnswerController implements Controller {
 
         answerDao.delete(answerId);
 
-        return new ModelAndView(new JsonView());
-
+        return ModelAndView.builder()
+                .jsonView();
     }
 }

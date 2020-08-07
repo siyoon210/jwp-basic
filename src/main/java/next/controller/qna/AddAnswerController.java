@@ -2,7 +2,6 @@ package next.controller.qna;
 
 import core.mvc.Controller;
 import core.mvc.modelandview.ModelAndView;
-import core.mvc.view.JsonView;
 import next.dao.AnswerDao;
 import next.model.Answer;
 import org.slf4j.Logger;
@@ -23,7 +22,8 @@ public class AddAnswerController implements Controller {
         AnswerDao answerDao = new AnswerDao();
         Answer savedAnswer = answerDao.insert(answer);
 
-        return new ModelAndView(new JsonView())
-                .addAttribute("savedAnswer", savedAnswer);
+        return ModelAndView.builder()
+                .addAttribute("savedAnswer", savedAnswer)
+                .jsonView();
     }
 }

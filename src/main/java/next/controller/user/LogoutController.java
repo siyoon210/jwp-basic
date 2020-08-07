@@ -2,7 +2,6 @@ package next.controller.user;
 
 import core.mvc.Controller;
 import core.mvc.modelandview.ModelAndView;
-import core.mvc.view.JspView;
 import next.controller.UserSessionUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +13,7 @@ public class LogoutController implements Controller {
     public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         HttpSession session = req.getSession();
         session.removeAttribute(UserSessionUtils.USER_SESSION_KEY);
-        return new ModelAndView(new JspView("redirect:/"));
+        return ModelAndView.builder()
+                .jspView("redirect:/");
     }
 }

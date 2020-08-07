@@ -2,7 +2,6 @@ package next.controller.user;
 
 import core.mvc.Controller;
 import core.mvc.modelandview.ModelAndView;
-import core.mvc.view.JspView;
 import next.dao.UserDao;
 import next.model.User;
 
@@ -19,7 +18,8 @@ public class ProfileController implements Controller {
             throw new NullPointerException("사용자를 찾을 수 없습니다.");
         }
 
-        return new ModelAndView(new JspView("/user/profile.jsp"))
-                .addAttribute("user", user);
+        return ModelAndView.builder()
+                .addAttribute("user", user)
+                .jspView("/user/profile.jsp");
     }
 }

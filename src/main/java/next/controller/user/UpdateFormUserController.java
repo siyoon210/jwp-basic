@@ -2,7 +2,6 @@ package next.controller.user;
 
 import core.mvc.Controller;
 import core.mvc.modelandview.ModelAndView;
-import core.mvc.view.JspView;
 import next.controller.UserSessionUtils;
 import next.dao.UserDao;
 import next.model.User;
@@ -20,7 +19,8 @@ public class UpdateFormUserController implements Controller {
         if (!UserSessionUtils.isSameUser(req.getSession(), user)) {
             throw new IllegalStateException("다른 사용자의 정보를 수정할 수 없습니다.");
         }
-        return new ModelAndView(new JspView("/user/updateForm.jsp"))
-                .addAttribute("user", user);
+        return ModelAndView.builder()
+                .addAttribute("user", user)
+                .jspView("/user/updateForm.jsp");
     }
 }
