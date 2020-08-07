@@ -18,18 +18,17 @@ public class JspView implements View {
 
     @Override
     public void render(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> model) throws Exception {
-        model.forEach(req::setAttribute);
-        move(url, req, resp);
+        move(req, resp, model);
     }
 
-    private void move(String viewName, HttpServletRequest req, HttpServletResponse resp)
+    private void move(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> model)
             throws ServletException, IOException {
-        if (viewName.startsWith(DEFAULT_REDIRECT_PREFIX)) {
-            resp.sendRedirect(viewName.substring(DEFAULT_REDIRECT_PREFIX.length()));
+        if (url.startsWith(DEFAULT_REDIRECT_PREFIX)) {
+            resp.sendRedirect(url.substring(DEFAULT_REDIRECT_PREFIX.length()));
             return;
         }
-
-        RequestDispatcher rd = req.getRequestDispatcher(viewName);
+        model.forEach(req::setAttribute);
+        RequestDispatcher rd = req.getRequestDispatcher(url);
         rd.forward(req, resp);
     }
 }
