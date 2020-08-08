@@ -1,14 +1,15 @@
 package core.mvc;
 
-import core.mvc.modelandview.ModelAndView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @WebServlet(name = "dispatcher", urlPatterns = "/", loadOnStartup = 1)
 public class DispatcherServlet extends HttpServlet {
@@ -18,20 +19,22 @@ public class DispatcherServlet extends HttpServlet {
     private RequestMapping rm;
 
     @Override
-    public void init() {
+    public void init() throws ServletException {
         rm = new RequestMapping();
         rm.initMapping();
     }
 
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String requestUri = req.getRequestURI();
         logger.debug("Method : {}, Request URI : {}", req.getMethod(), requestUri);
 
-        Controller controller = rm.findController(requestUri);
+        Controller controller = rm.findController(req.getRequestURI());
+        ModelAndView mav;
         try {
-            ModelAndView modelAndView = controller.execute(req, resp);
-            modelAndView.render(req, resp);
+            mav = controller.execute(req, resp);
+            View view = mav.getView();
+            view.render(mav.getModel(), req, resp);
         } catch (Throwable e) {
             logger.error("Exception : {}", e);
             throw new ServletException(e.getMessage());

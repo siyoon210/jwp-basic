@@ -1,18 +1,17 @@
 package next.controller;
 
-import core.mvc.Controller;
-import core.mvc.modelandview.ModelAndView;
-import next.dao.QuestionDao;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class HomeController implements Controller {
+import next.dao.QuestionDao;
+import core.mvc.AbstractController;
+import core.mvc.ModelAndView;
+
+public class HomeController extends AbstractController {
+    private QuestionDao questionDao = new QuestionDao();
+
     @Override
-    public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        QuestionDao questionDao = new QuestionDao();
-        return ModelAndView.builder()
-                .addAttribute("questions", questionDao.findAll())
-                .jspView("home.jsp");
+    public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return jspView("home.jsp").addObject("questions", questionDao.findAll());
     }
 }

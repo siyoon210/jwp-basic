@@ -1,26 +1,19 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!DOCTYPE html>
 <html lang="kr">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <title>SLiPP Java Web Programming</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <!--[if lt IE 9]>
-    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link href="../css/styles.css" rel="stylesheet">
+	<%@ include file="/include/header.jspf" %>
 </head>
 <body>
-<%@ include file="../nav/nav.jsp" %>
+<%@ include file="/include/navigation.jspf" %>
 
 <div class="container" id="main">
    <div class="col-md-12 col-sm-12 col-lg-10 col-lg-offset-1">
       <div class="panel panel-default content-main">
-          <form name="question" method="post" action="">
+          <form name="question" method="post" action="/qna/create">
               <div class="form-group">
                   <label for="writer">글쓴이</label>
                   <input class="form-control" id="writer" name="writer" placeholder="글쓴이"/>
@@ -40,9 +33,6 @@
     </div>
 </div>
 
-<!-- script references -->
-<script src="../js/jquery-2.2.0.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/scripts.js"></script>
-	</body>
+<%@ include file="/include/footer.jspf" %>
+</body>
 </html>

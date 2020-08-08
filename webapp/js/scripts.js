@@ -16,38 +16,15 @@ function addAnswer(e) {
   });
 }
 
-function onSuccess(resp, status){
+function onSuccess(json, status){
+  var answer = json.answer;
   var answerTemplate = $("#answerTemplate").html();
-  var template = answerTemplate.format(resp.savedAnswer.writer, new Date(resp.savedAnswer.createdDate), resp.savedAnswer.contents, resp.savedAnswer.answerId, resp.savedAnswer.answerId);
+  var template = answerTemplate.format(answer.writer, new Date(answer.createdDate), answer.contents, answer.answerId, answer.answerId);
   $(".qna-comment-slipp-articles").prepend(template);
 }
 
 function onError(xhr, status) {
   alert("error");
-}
-
-$(".qna-comment").on("click", ".form-delete", deleteAnswer);
-
-function deleteAnswer(e) {
-  e.preventDefault();
-
-  var deleteBtn = $(this);
-  var queryString = deleteBtn.closest("form").serialize();
-
-  $.ajax({
-    type: 'post',
-    url: "/api/qna/deleteAnswer",
-    data: queryString,
-    dataType: 'json',
-    error: function (xhr, status) {
-      alert("error");
-    },
-    success: function (json, status) {
-      if (json.status) {
-        deleteBtn.closest('article').remove();
-      }
-    }
-  });
 }
 
 String.prototype.format = function() {
