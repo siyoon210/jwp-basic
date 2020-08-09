@@ -17,10 +17,20 @@ function addAnswer(e) {
 }
 
 function onSuccess(json, status){
-  var answer = json.answer;
-  var answerTemplate = $("#answerTemplate").html();
-  var template = answerTemplate.format(answer.writer, new Date(answer.createdDate), answer.contents, answer.answerId, answer.answerId);
-  $(".qna-comment-slipp-articles").prepend(template);
+  insertAnswer();
+  increaseCountOfAnswer();
+
+  function insertAnswer() {
+    var answer = json.answer;
+    var answerTemplate = $("#answerTemplate").html();
+    var template = answerTemplate.format(answer.writer, new Date(answer.createdDate), answer.contents, answer.answerId, answer.answerId);
+    $(".qna-comment-slipp-articles").prepend(template);
+  }
+
+  function increaseCountOfAnswer() {
+    var question = json.question;
+    $(".qna-comment-count-number").text(question.countOfComment);
+  }
 }
 
 function onError(xhr, status) {

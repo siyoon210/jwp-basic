@@ -5,6 +5,7 @@ import core.mvc.ModelAndView;
 import next.dao.AnswerDao;
 import next.dao.QuestionDao;
 import next.model.Answer;
+import next.model.Question;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ public class AddAnswerController extends AbstractController {
         QuestionDao questionDao = new QuestionDao();
         final long questionId = Long.parseLong(req.getParameter("questionId"));
         questionDao.increaseCountOfAnswer(questionId);
-        return jsonView().addObject("answer", savedAnswer);
+        final Question question = questionDao.findById(questionId);
+        return jsonView().addObject("answer", savedAnswer).addObject("question", question);
     }
 }
