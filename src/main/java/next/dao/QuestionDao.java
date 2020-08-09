@@ -72,4 +72,15 @@ public class QuestionDao {
 
         jdbcTemplate.update(sql, ps);
     }
+
+    public void decreaseCountOfAnswer(long questionId) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String sql = "UPDATE QUESTIONS SET countOfAnswer = countOfAnswer - 1 WHERE questionId = ?1";
+
+        PreparedStatementSetter ps = pstmt -> {
+            pstmt.setObject(1, questionId);
+        };
+
+        jdbcTemplate.update(sql, ps);
+    }
 }

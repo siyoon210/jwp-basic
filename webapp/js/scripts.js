@@ -17,7 +17,7 @@ function addAnswer(e) {
 
   function onSuccess(json, status){
     insertAnswer();
-    increaseCountOfAnswer();
+    adjustCountOfAnswer(json);
 
     function insertAnswer() {
       var answer = json.answer;
@@ -25,16 +25,16 @@ function addAnswer(e) {
       var template = answerTemplate.format(answer.writer, new Date(answer.createdDate), answer.contents, answer.answerId, answer.answerId);
       $(".qna-comment-slipp-articles").prepend(template);
     }
-
-    function increaseCountOfAnswer() {
-      var question = json.question;
-      $(".qna-comment-count-number").text(question.countOfComment);
-    }
   }
 
   function onError(xhr, status) {
     alert("error");
   }
+}
+
+function adjustCountOfAnswer(json) {
+  var question = json.question;
+  $(".qna-comment-count-number").text(question.countOfComment);
 }
 
 String.prototype.format = function() {
@@ -56,11 +56,16 @@ function deleteAnswer(e) {
   var queryString = deleteBtn.closest('form').serialize();
 
   $.ajax({
-    type : 'post',
-    url : '/api/qna/deleteAnswer',
-    data : queryString,
-    dataType : 'json',
-    error: () => {alert('error')},
-    success : () => {alert('success')},
+    type: 'post',
+    url: '/api/qna/deleteAnswer',
+    data: queryString,
+    dataType: 'json',
+    error: () => {
+      alert('error')
+    },
+    success: (json) => {
+      deleteBtn.closest('article').remove();
+      adjustCountOfAnswer(json);
+    },
   });
 }
