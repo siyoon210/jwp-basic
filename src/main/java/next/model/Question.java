@@ -1,5 +1,6 @@
 package next.model;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 public class Question {
@@ -27,6 +28,11 @@ public class Question {
         this.contents = contents;
         this.createdDate = createdDate;
         this.countOfComment = countOfComment;
+    }
+
+    public Question(final HttpServletRequest request) {
+        this(0, request.getParameter("writer"), request.getParameter("title"),
+                request.getParameter("contents"), new Date(), 0);
     }
 
     public long getQuestionId() {
