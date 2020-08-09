@@ -19,4 +19,5 @@
 [Dispatcher방식과-Redirect-방식](https://devbox.tistory.com/entry/Comporison-Dispatcher%EB%B0%A9%EC%8B%9D%EA%B3%BC-Redirect-%EB%B0%A9%EC%8B%9D)
 
 #### 7. next.web.qna package의 ShowController는 멀티 쓰레드 상황에서 문제가 발생하는 이유에 대해 설명하라.
-* 
+- 다중요청이 들어와도 ShowController는 RequestMapper에 선언된 단 하나의 객체만 계속 사용하게 된다. 이런 경우 ShowController의 인스턴스 멤버가 문제를 일으킬수 있다. 다중 요청으로 question과 answer가 계속 변하게 되고 시행중에 이를 참조하고 있는 다른 요청이 의도치 않은 값을 반환할 수 있기 때문이다. (인스턴스 멤버는 힙메모리에 존재하기 떄문에 다른 Thread들과 값을 공유한다.)
+  이를 해결하기 위해서 question과 answer을 메서드 내부로 옮겨서 선언했다. 메서드 내부에 선언된 값은 힙영역이 아닌 메서드 영역에 존재하기 때문에 다중요청시마다 별개의 메서드 영역을 갖게 되고, 원천적으로 힙오염이 발생할수 없다.
