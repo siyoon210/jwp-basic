@@ -10,6 +10,7 @@ CREATE TABLE USERS (
 );
 
 INSERT INTO USERS VALUES('admin', 'password', '자바지기', 'admin@slipp.net');
+INSERT INTO USERS VALUES('siyoon', '1234', '푸루', 'puru@naver.com');
 
 DROP TABLE IF EXISTS QUESTIONS;
 

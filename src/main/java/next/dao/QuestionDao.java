@@ -1,17 +1,10 @@
 package next.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.List;
-
-import core.jdbc.JdbcTemplate;
-import core.jdbc.KeyHolder;
-import core.jdbc.PreparedStatementCreator;
-import core.jdbc.RowMapper;
+import core.jdbc.*;
 import next.model.Question;
+
+import java.sql.*;
+import java.util.List;
 
 public class QuestionDao {
     public Question insert(Question question) {
@@ -67,5 +60,27 @@ public class QuestionDao {
         };
 
         return jdbcTemplate.queryForObject(sql, rm, questionId);
+    }
+
+    public void increaseCountOfAnswer(long questionId) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String sql = "UPDATE QUESTIONS SET countOfAnswer = countOfAnswer + 1 WHERE questionId = ?1";
+
+        PreparedStatementSetter ps = pstmt -> {
+            pstmt.setObject(1, questionId);
+        };
+
+        jdbcTemplate.update(sql, ps);
+    }
+
+    public void decreaseCountOfAnswer(long questionId) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String sql = "UPDATE QUESTIONS SET countOfAnswer = countOfAnswer - 1 WHERE questionId = ?1";
+
+        PreparedStatementSetter ps = pstmt -> {
+            pstmt.setObject(1, questionId);
+        };
+
+        jdbcTemplate.update(sql, ps);
     }
 }
