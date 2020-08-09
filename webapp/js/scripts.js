@@ -14,27 +14,27 @@ function addAnswer(e) {
     error: onError,
     success : onSuccess,
   });
-}
 
-function onSuccess(json, status){
-  insertAnswer();
-  increaseCountOfAnswer();
+  function onSuccess(json, status){
+    insertAnswer();
+    increaseCountOfAnswer();
 
-  function insertAnswer() {
-    var answer = json.answer;
-    var answerTemplate = $("#answerTemplate").html();
-    var template = answerTemplate.format(answer.writer, new Date(answer.createdDate), answer.contents, answer.answerId, answer.answerId);
-    $(".qna-comment-slipp-articles").prepend(template);
+    function insertAnswer() {
+      var answer = json.answer;
+      var answerTemplate = $("#answerTemplate").html();
+      var template = answerTemplate.format(answer.writer, new Date(answer.createdDate), answer.contents, answer.answerId, answer.answerId);
+      $(".qna-comment-slipp-articles").prepend(template);
+    }
+
+    function increaseCountOfAnswer() {
+      var question = json.question;
+      $(".qna-comment-count-number").text(question.countOfComment);
+    }
   }
 
-  function increaseCountOfAnswer() {
-    var question = json.question;
-    $(".qna-comment-count-number").text(question.countOfComment);
+  function onError(xhr, status) {
+    alert("error");
   }
-}
-
-function onError(xhr, status) {
-  alert("error");
 }
 
 String.prototype.format = function() {
@@ -46,3 +46,21 @@ String.prototype.format = function() {
         ;
   });
 };
+
+$(".form-answer-delete button[type=submit]").click(deleteAnswer);
+
+function deleteAnswer(e) {
+  e.preventDefault();
+
+  var deleteBtn = $(this);
+  var queryString = deleteBtn.closest('form').serialize();
+
+  $.ajax({
+    type : 'post',
+    url : '/api/qna/deleteAnswer',
+    data : queryString,
+    dataType : 'json',
+    error: () => {alert('error')},
+    success : () => {alert('success')},
+  });
+}
