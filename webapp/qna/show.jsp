@@ -36,7 +36,10 @@
 					<div class="article-util">
 						<ul class="article-util-list">
 							<li>
-								<a class="link-modify-article" href="#">수정</a>
+								<form action="/qna/update-form" method="POST">
+									<input type="hidden" name="questionId" value="${question.questionId}">
+									<button class="link-modify-article" type="submit">수정</button>
+								</form>
 							</li>
 							<li>
 								<form class="form-delete" action="#" method="POST">

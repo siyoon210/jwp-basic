@@ -131,3 +131,9 @@ INSERT INTO ANSWERS (writer, contents, createdDate, questionId) VALUES
 ('Toby Lee',
 '람다식에서 사용되는 변수라면 람다식 내부에서 정의된 로컬 변수이거나 람다식이 선언된 외부의 변수를 참조하는 것일텐데, 전자라면 아무리 변경해도 문제될 이유가 없고, 후자는 변경 자체가 허용이 안될텐데. 이 설명이 무슨 뜻인지 이해가 안 됨.', 
 CURRENT_TIMESTAMP(), 8);
+
+INSERT INTO QUESTIONS (questionId, writer, title, contents, createdDate, countOfAnswer) VALUES
+(9, '푸루',
+'안녕하세요',
+'푸루입니다. 반갑습니다. 개발을 좋아해요',
+CURRENT_TIMESTAMP(), 0);
