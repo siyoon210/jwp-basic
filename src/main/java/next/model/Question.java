@@ -90,4 +90,10 @@ public class Question {
             return false;
         return true;
     }
+
+    public void update(HttpServletRequest request) {
+        writer = request.getParameter("writer");
+        title = request.getParameter("title");
+        contents = request.getParameter("contents");
+    }
 }
