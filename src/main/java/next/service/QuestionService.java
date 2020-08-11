@@ -31,8 +31,7 @@ public class QuestionService {
             throw new RuntimeException();
         }
 
-//        questionDao.delete(question);
-
+        questionDao.delete(question.getQuestionId());
         return question;
     }
 }

@@ -20,7 +20,9 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class QuestionServiceTest {
     @Mock
@@ -49,6 +51,7 @@ public class QuestionServiceTest {
 
         //then
         assertThat(question.getQuestionId()).isEqualTo(questionId);
+        verify(questionDao, times(1)).delete(questionId);
     }
 
     @Test
@@ -80,6 +83,7 @@ public class QuestionServiceTest {
 
         //then
         assertThat(question.getQuestionId()).isEqualTo(questionId);
+        verify(questionDao, times(1)).delete(questionId);
     }
 
     @Test
@@ -99,6 +103,7 @@ public class QuestionServiceTest {
 
         //then
         assertThat(question.getQuestionId()).isEqualTo(questionId);
+        verify(questionDao, times(1)).delete(questionId);
     }
 
     @Test

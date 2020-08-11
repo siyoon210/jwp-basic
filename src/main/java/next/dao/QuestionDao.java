@@ -93,4 +93,14 @@ public class QuestionDao {
 
         jdbcTemplate.update(sql, ps);
     }
+
+    public void delete(long questionId) {
+        String sql = "DELETE FROM QUESTIONS WHERE questionId = ?1";
+
+        PreparedStatementSetter ps = pstmt -> {
+            pstmt.setObject(1, questionId);
+        };
+
+        jdbcTemplate.update(sql, ps);
+    }
 }
