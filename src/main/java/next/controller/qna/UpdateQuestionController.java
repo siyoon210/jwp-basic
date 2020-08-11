@@ -39,7 +39,8 @@ public class UpdateQuestionController extends AbstractController {
             return jspView("redirect:/");
         }
 
-//        questionDao.update(question);
+        question.update(request);
+        questionDao.update(question);
 
         log.info("Update Question. {}", question.toString());
         return jspView("redirect:/");

@@ -83,4 +83,18 @@ public class QuestionDao {
 
         jdbcTemplate.update(sql, ps);
     }
+
+    public void update(Question question) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String sql = "UPDATE QUESTIONS SET writer = ?1, title = ?2, contents = ?3 WHERE questionId = ?4";
+
+        PreparedStatementSetter ps = pstmt -> {
+            pstmt.setObject(1, question.getWriter());
+            pstmt.setObject(2, question.getTitle());
+            pstmt.setObject(3, question.getContents());
+            pstmt.setObject(4, question.getQuestionId());
+        };
+
+        jdbcTemplate.update(sql, ps);
+    }
 }
