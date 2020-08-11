@@ -17,7 +17,7 @@ import static next.controller.UserSessionUtils.isLogined;
 public class DeleteQuestionController extends AbstractController {
     private static final Logger log = LoggerFactory.getLogger(DeleteQuestionController.class);
     private final QuestionDao questionDao = new QuestionDao();
-    private final QuestionService questionService = new QuestionService();
+    private final QuestionService questionService = new QuestionService(questionDao);
 
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
