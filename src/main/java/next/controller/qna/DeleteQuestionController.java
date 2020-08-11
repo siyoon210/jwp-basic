@@ -3,6 +3,7 @@ package next.controller.qna;
 import core.mvc.AbstractController;
 import core.mvc.ModelAndView;
 import next.controller.UserSessionUtils;
+import next.dao.AnswerDao;
 import next.dao.QuestionDao;
 import next.model.User;
 import next.service.QuestionService;
@@ -17,7 +18,8 @@ import static next.controller.UserSessionUtils.isLogined;
 public class DeleteQuestionController extends AbstractController {
     private static final Logger log = LoggerFactory.getLogger(DeleteQuestionController.class);
     private final QuestionDao questionDao = new QuestionDao();
-    private final QuestionService questionService = new QuestionService(questionDao);
+    private final AnswerDao answerDao = new AnswerDao();
+    private final QuestionService questionService = new QuestionService(questionDao, answerDao);
 
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
