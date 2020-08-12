@@ -7,9 +7,10 @@ import java.sql.*;
 import java.util.List;
 
 public class QuestionDao {
+    private final JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
+
     public Question insert(Question question) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String sql = "INSERT INTO QUESTIONS " + 
+        String sql = "INSERT INTO QUESTIONS " +
                 "(writer, title, contents, createdDate) " + 
                 " VALUES (?, ?, ?, ?)";
         PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -30,7 +31,6 @@ public class QuestionDao {
     }
     
     public List<Question> findAll() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "SELECT questionId, writer, title, createdDate, countOfAnswer FROM QUESTIONS "
                 + "order by questionId desc";
 
@@ -47,7 +47,6 @@ public class QuestionDao {
     }
 
     public Question findById(long questionId) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "SELECT questionId, writer, title, contents, createdDate, countOfAnswer FROM QUESTIONS "
                 + "WHERE questionId = ?";
 
@@ -63,7 +62,6 @@ public class QuestionDao {
     }
 
     public void increaseCountOfAnswer(long questionId) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "UPDATE QUESTIONS SET countOfAnswer = countOfAnswer + 1 WHERE questionId = ?1";
 
         PreparedStatementSetter ps = pstmt -> {
@@ -74,7 +72,6 @@ public class QuestionDao {
     }
 
     public void decreaseCountOfAnswer(long questionId) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "UPDATE QUESTIONS SET countOfAnswer = countOfAnswer - 1 WHERE questionId = ?1";
 
         PreparedStatementSetter ps = pstmt -> {
@@ -85,7 +82,6 @@ public class QuestionDao {
     }
 
     public void update(Question question) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "UPDATE QUESTIONS SET writer = ?1, title = ?2, contents = ?3 WHERE questionId = ?4";
 
         PreparedStatementSetter ps = pstmt -> {
@@ -93,6 +89,16 @@ public class QuestionDao {
             pstmt.setObject(2, question.getTitle());
             pstmt.setObject(3, question.getContents());
             pstmt.setObject(4, question.getQuestionId());
+        };
+
+        jdbcTemplate.update(sql, ps);
+    }
+
+    public void delete(long questionId) {
+        String sql = "DELETE FROM QUESTIONS WHERE questionId = ?1";
+
+        PreparedStatementSetter ps = pstmt -> {
+            pstmt.setObject(1, questionId);
         };
 
         jdbcTemplate.update(sql, ps);
