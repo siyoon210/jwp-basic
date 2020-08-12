@@ -7,6 +7,7 @@ import next.model.Question;
 import next.model.User;
 
 import java.util.List;
+import java.util.Objects;
 
 public class QuestionService {
     private final QuestionDao questionDao;
@@ -18,6 +19,10 @@ public class QuestionService {
     }
 
     public Question deleteQuestion(long questionId, User loginUser) {
+        if (Objects.isNull(loginUser)) {
+            throw  new RuntimeException();
+        }
+
         final Question question = questionDao.findById(questionId);
 
         if (!question.getWriter().equals(loginUser.getName())) {

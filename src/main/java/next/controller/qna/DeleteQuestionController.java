@@ -30,7 +30,11 @@ public class DeleteQuestionController extends AbstractController {
 
         final long questionId = Long.parseLong(request.getParameter("questionId"));
         final User userFromSession = UserSessionUtils.getUserFromSession(request.getSession());
-        questionService.deleteQuestion(questionId, userFromSession);
+        try {
+            questionService.deleteQuestion(questionId, userFromSession);
+        } catch (RuntimeException e) {
+            log.info("Can't delete question");
+        }
         log.info("Delete Question. {}", questionId);
         return jspView("redirect:/");
     }
