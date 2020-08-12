@@ -2,6 +2,7 @@ package next.controller.qna;
 
 import core.mvc.AbstractController;
 import core.mvc.ModelAndView;
+import core.mvc.annotation.RequestUrl;
 import next.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import java.util.Objects;
 import static next.controller.UserSessionUtils.getUserFromSession;
 import static next.controller.UserSessionUtils.isLogined;
 
+@RequestUrl(url = "/qna/form")
 public class CreateQuestionFormController extends AbstractController {
     private static final Logger log = LoggerFactory.getLogger(CreateQuestionFormController.class);
 
