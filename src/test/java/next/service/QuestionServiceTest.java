@@ -31,10 +31,13 @@ public class QuestionServiceTest {
     private final AnswerDao answerDao = new AnswerDao();
     @InjectMocks
     private QuestionService questionService;
+    private final int questionId = 1;
 
     @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
+        when(questionDao.findById(anyLong()))
+                .thenReturn(new Question(questionId, "푸루", "답변이 안달려서 슬픈 질문", "제발 답변좀 해주세요", new Date(), 0));
     }
 
     @Test
@@ -42,9 +45,6 @@ public class QuestionServiceTest {
     public void deleteQuestionTest_SameWriterAndLoginUserName() {
         //given
         User loginUser = new User("siyoon", "1234", "푸루", "beko@naver.com");
-        final int questionId = 1;
-        when(questionDao.findById(anyLong()))
-                .thenReturn(new Question(questionId, "푸루", "답변이 안달려서 슬픈 질문", "제발 답변좀 해주세요", new Date(), 0));
 
         //when
         final Question question = questionService.deleteQuestion(questionId, loginUser);
@@ -59,12 +59,10 @@ public class QuestionServiceTest {
     public void deleteQuestionTest_DifferentWriterAndLoginUserName() {
         //given
         User loginUser = new User("siyoon", "1234", "배코", "beko@naver.com");
-        when(questionDao.findById(anyLong()))
-                .thenReturn(new Question(1, "푸루", "답변이 안달려서 슬픈 질문", "제발 답변좀 해주세요", new Date(), 0));
 
         //when
         //then
-        assertThrows(RuntimeException.class, () -> questionService.deleteQuestion(1, loginUser));
+        assertThrows(RuntimeException.class, () -> questionService.deleteQuestion(questionId, loginUser));
     }
 
     @Test
@@ -72,9 +70,7 @@ public class QuestionServiceTest {
     public void deleteQuestionTest_DoesNotHaveAnyAnswer() {
         //given
         User loginUser = new User("siyoon", "1234", "푸루", "beko@naver.com");
-        final int questionId = 1;
-        when(questionDao.findById(questionId))
-                .thenReturn(new Question(questionId, "푸루", "답변이 안달려서 슬픈 질문", "제발 답변좀 해주세요", new Date(), 0));
+
         when(answerDao.findAllByQuestionId(questionId))
                 .thenReturn(Lists.emptyList());
 
@@ -91,9 +87,7 @@ public class QuestionServiceTest {
     public void deleteQuestionTest_questionWriterAndAnswerWriterAreAllSame() {
         //given
         User loginUser = new User("siyoon", "1234", "푸루", "beko@naver.com");
-        final int questionId = 1;
-        when(questionDao.findById(questionId))
-                .thenReturn(new Question(questionId, "푸루", "답변이 안달려서 슬픈 질문", "제발 답변좀 해주세요", new Date(), 0));
+
 
         when(answerDao.findAllByQuestionId(questionId))
                 .thenReturn(getNoOneAnswers());
@@ -111,9 +105,7 @@ public class QuestionServiceTest {
     public void deleteQuestionTest_questionWriterAndAnswerWriterAreDifferent() {
         //given
         User loginUser = new User("siyoon", "1234", "푸루", "beko@naver.com");
-        final int questionId = 1;
-        when(questionDao.findById(questionId))
-                .thenReturn(new Question(questionId, "푸루", "답변이 안달려서 슬픈 질문", "제발 답변좀 해주세요", new Date(), 0));
+
 
         when(answerDao.findAllByQuestionId(questionId))
                 .thenReturn(getAnsweredAnswers());
