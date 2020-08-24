@@ -1,18 +1,34 @@
 package next.dao;
 
-import core.jdbc.*;
-import next.model.Question;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
+import next.model.Question;
+import core.jdbc.JdbcTemplate;
+import core.jdbc.KeyHolder;
+import core.jdbc.PreparedStatementCreator;
+import core.jdbc.RowMapper;
+
 public class QuestionDao {
-    private final JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
+    private static QuestionDao questionDao;
+    private JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
+
+    private QuestionDao() {
+    }
+
+    public static QuestionDao getInstance() {
+        if (questionDao == null) {
+            questionDao = new QuestionDao();
+        }
+        return questionDao;
+    }
 
     public Question insert(Question question) {
-        String sql = "INSERT INTO QUESTIONS " +
-                "(writer, title, contents, createdDate) " + 
-                " VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO QUESTIONS (writer, title, contents, createdDate) VALUES (?, ?, ?, ?)";
         PreparedStatementCreator psc = new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
@@ -29,7 +45,7 @@ public class QuestionDao {
         jdbcTemplate.update(psc, keyHolder);
         return findById(keyHolder.getId());
     }
-    
+
     public List<Question> findAll() {
         String sql = "SELECT questionId, writer, title, createdDate, countOfAnswer FROM QUESTIONS "
                 + "order by questionId desc";
@@ -61,46 +77,18 @@ public class QuestionDao {
         return jdbcTemplate.queryForObject(sql, rm, questionId);
     }
 
-    public void increaseCountOfAnswer(long questionId) {
-        String sql = "UPDATE QUESTIONS SET countOfAnswer = countOfAnswer + 1 WHERE questionId = ?1";
-
-        PreparedStatementSetter ps = pstmt -> {
-            pstmt.setObject(1, questionId);
-        };
-
-        jdbcTemplate.update(sql, ps);
-    }
-
-    public void decreaseCountOfAnswer(long questionId) {
-        String sql = "UPDATE QUESTIONS SET countOfAnswer = countOfAnswer - 1 WHERE questionId = ?1";
-
-        PreparedStatementSetter ps = pstmt -> {
-            pstmt.setObject(1, questionId);
-        };
-
-        jdbcTemplate.update(sql, ps);
-    }
-
     public void update(Question question) {
-        String sql = "UPDATE QUESTIONS SET writer = ?1, title = ?2, contents = ?3 WHERE questionId = ?4";
-
-        PreparedStatementSetter ps = pstmt -> {
-            pstmt.setObject(1, question.getWriter());
-            pstmt.setObject(2, question.getTitle());
-            pstmt.setObject(3, question.getContents());
-            pstmt.setObject(4, question.getQuestionId());
-        };
-
-        jdbcTemplate.update(sql, ps);
+        String sql = "UPDATE QUESTIONS set title = ?, contents = ? WHERE questionId = ?";
+        jdbcTemplate.update(sql, question.getTitle(), question.getContents(), question.getQuestionId());
     }
 
     public void delete(long questionId) {
-        String sql = "DELETE FROM QUESTIONS WHERE questionId = ?1";
+        String sql = "DELETE FROM QUESTIONS WHERE questionId = ?";
+        jdbcTemplate.update(sql, questionId);
+    }
 
-        PreparedStatementSetter ps = pstmt -> {
-            pstmt.setObject(1, questionId);
-        };
-
-        jdbcTemplate.update(sql, ps);
+    public void updateCountOfAnswer(long questionId) {
+        String sql = "UPDATE QUESTIONS set countOfAnswer = countOfAnswer + 1 WHERE questionId = ?";
+        jdbcTemplate.update(sql, questionId);
     }
 }

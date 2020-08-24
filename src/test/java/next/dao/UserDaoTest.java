@@ -1,17 +1,18 @@
 package next.dao;
 
-import core.jdbc.ConnectionManager;
-import next.model.User;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import core.jdbc.ConnectionManager;
+import next.model.User;
 
 public class UserDaoTest {
-    @BeforeEach
+    @Before
     public void setup() {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(new ClassPathResource("jwp.sql"));
@@ -21,7 +22,7 @@ public class UserDaoTest {
     @Test
     public void crud() throws Exception {
         User expected = new User("userId", "password", "name", "javajigi@email.com");
-        UserDao userDao = new UserDao();
+        UserDao userDao = UserDao.getInstance();
         userDao.insert(expected);
 
         User actual = userDao.findByUserId(expected.getUserId());

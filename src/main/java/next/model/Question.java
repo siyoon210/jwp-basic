@@ -1,6 +1,5 @@
 package next.model;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 public class Question {
@@ -28,11 +27,6 @@ public class Question {
         this.contents = contents;
         this.createdDate = createdDate;
         this.countOfComment = countOfComment;
-    }
-
-    public Question(final HttpServletRequest request) {
-        this(0, request.getParameter("writer"), request.getParameter("title"),
-                request.getParameter("contents"), new Date(), 0);
     }
 
     public long getQuestionId() {
@@ -63,6 +57,15 @@ public class Question {
         return countOfComment;
     }
 
+    public boolean isSameUser(User user) {
+        return user.isSameUser(this.writer);
+    }
+
+    public void update(Question newQuestion) {
+        this.title = newQuestion.title;
+        this.contents = newQuestion.contents;
+    }
+
     @Override
     public String toString() {
         return "Question [questionId=" + questionId + ", writer=" + writer + ", title=" + title + ", contents="
@@ -89,11 +92,5 @@ public class Question {
         if (questionId != other.questionId)
             return false;
         return true;
-    }
-
-    public void update(HttpServletRequest request) {
-        writer = request.getParameter("writer");
-        title = request.getParameter("title");
-        contents = request.getParameter("contents");
     }
 }
