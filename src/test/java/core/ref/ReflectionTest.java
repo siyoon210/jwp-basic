@@ -12,6 +12,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 public class ReflectionTest {
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
 
@@ -62,8 +65,24 @@ public class ReflectionTest {
     }
     
     @Test
-    public void privateFieldAccess() {
+    public void privateFieldAccess() throws Exception {
+        final String STUDENT_NAME = "siyoon";
+        final int STUDENT_AGE = 8;
+
         Class<Student> clazz = Student.class;
+        final Student student = clazz.getConstructor().newInstance();
+
+        final Field name = clazz.getDeclaredField("name");
+        name.setAccessible(true);
+        name.set(student, STUDENT_NAME);
+
+        final Field age = clazz.getDeclaredField("age");
+        age.setAccessible(true);
+        age.set(student, STUDENT_AGE);
+
+        assertThat(student.getName(), is(STUDENT_NAME));
+        assertThat(student.getAge(), is(STUDENT_AGE));
+
         logger.debug(clazz.getName());
     }
 }
