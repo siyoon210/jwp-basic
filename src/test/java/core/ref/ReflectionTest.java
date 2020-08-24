@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -46,6 +47,17 @@ public class ReflectionTest {
     @Test
     public void newInstanceWithConstructorArgs() {
         Class<User> clazz = User.class;
+        final Constructor<?>[] declaredConstructors = clazz.getDeclaredConstructors();
+        Arrays.stream(declaredConstructors)
+                .forEach(c -> {
+                    try {
+                        final User u = (User) c.newInstance("siyoon", "1234", "puru", "puru@naver.com");
+                        logger.debug("Created User. {}", u.toString());
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                });
+
         logger.debug(clazz.getName());
     }
     
