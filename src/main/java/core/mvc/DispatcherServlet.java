@@ -1,5 +1,7 @@
 package core.mvc;
 
+import core.nmvc.AnnotationHandlerMapping;
+import core.nmvc.HandlerExecution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,11 +18,14 @@ public class DispatcherServlet extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
 
     private LegacyRequestMapping rm;
+    private AnnotationHandlerMapping am;
 
     @Override
     public void init() throws ServletException {
         rm = new LegacyRequestMapping();
         rm.initMapping();
+        am = new AnnotationHandlerMapping();
+        am.initMapping();
     }
 
     @Override
@@ -28,15 +33,39 @@ public class DispatcherServlet extends HttpServlet {
         String requestUri = req.getRequestURI();
         logger.debug("Method : {}, Request URI : {}", req.getMethod(), requestUri);
 
-        Controller controller = rm.findController(req.getRequestURI(), null);
         ModelAndView mav;
         try {
-            mav = controller.execute(req, resp);
+            final Object handler = getHandler(req);
+
+            if (handler instanceof LegacyRequestMapping) {
+                mav = ((Controller) handler).execute(req, resp);
+            } else if (handler instanceof AnnotationHandlerMapping) {
+                mav = ((HandlerExecution) handler).handle(req, resp);
+            } else {
+                throw new IllegalArgumentException();
+            }
+
             View view = mav.getView();
             view.render(mav.getModel(), req, resp);
         } catch (Throwable e) {
             logger.error("Exception : {}", e);
             throw new ServletException(e.getMessage());
         }
+    }
+
+    private Object getHandler(HttpServletRequest request) {
+        final String requestURI = request.getRequestURI();
+
+        final Controller controller = rm.findController(requestURI);
+        if (controller != null) {
+            return controller;
+        }
+
+        final HandlerExecution handler = am.getHandler(request);
+        if (handler != null) {
+            return handler;
+        }
+
+        throw new IllegalArgumentException();
     }
 }

@@ -1,6 +1,5 @@
 package core.mvc;
 
-import core.annotation.RequestMethod;
 import next.controller.HomeController;
 import next.controller.qna.*;
 import next.controller.user.*;
@@ -39,7 +38,7 @@ public class LegacyRequestMapping implements HandlerMapping {
         logger.info("Initialized Request Mapping!");
     }
 
-    public Controller findController(String url, RequestMethod requestMethod) {
+    public Controller findController(String url) {
         return mappings.get(url);
     }
 
