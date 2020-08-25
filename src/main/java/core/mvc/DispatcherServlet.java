@@ -40,7 +40,7 @@ public class DispatcherServlet extends HttpServlet {
             if (handler instanceof LegacyRequestMapping) {
                 mav = ((Controller) handler).execute(req, resp);
             } else if (handler instanceof AnnotationHandlerMapping) {
-                mav = ((HandlerExecution) handler).handle(req, resp);
+                mav = ((AnnotationHandlerMapping) handler).getHandler(req).handle(req, resp);
             } else {
                 throw new IllegalArgumentException();
             }

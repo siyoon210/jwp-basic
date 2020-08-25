@@ -30,8 +30,7 @@ public class AnnotationHandlerMapping implements HandlerMapping {
             for (Method method : allMethods) {
                 final RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
                 final HandlerKey handlerKey = new HandlerKey(requestMapping.value(), requestMapping.method());
-                //todo HandlerExecution 만들기
-                handlerExecutions.put(handlerKey, new HandlerExecution());
+                handlerExecutions.put(handlerKey, new HandlerExecution(classObjectEntry.getValue(), method));
             }
 
         }
