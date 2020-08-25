@@ -1,12 +1,15 @@
 package core.nmvc;
 
-import java.util.Map;
+import com.google.common.collect.Maps;
+import core.annotation.RequestMapping;
+import core.annotation.RequestMethod;
+import core.mvc.Controller;
+import org.reflections.ReflectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
-
-import com.google.common.collect.Maps;
-
-import core.annotation.RequestMethod;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.Set;
 
 public class AnnotationHandlerMapping {
     private Object[] basePackage;
@@ -18,7 +21,19 @@ public class AnnotationHandlerMapping {
     }
 
     public void initialize() {
+        ControllerScanner controllerScanner = new ControllerScanner();
+        final Map<Class<Controller>, Object> controllers = controllerScanner.getControllers();
+        for (Map.Entry<Class<Controller>, Object> classObjectEntry : controllers.entrySet()) {
+            final Set<Method> allMethods = ReflectionUtils.getAllMethods(classObjectEntry.getKey(), ReflectionUtils.withAnnotation(RequestMapping.class));
 
+            for (Method method : allMethods) {
+                final RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
+                final HandlerKey handlerKey = new HandlerKey(requestMapping.value(), requestMapping.method());
+                //todo HandlerExecution 만들기
+                handlerExecutions.put(handlerKey, new HandlerExecution());
+            }
+
+        }
     }
 
     public HandlerExecution getHandler(HttpServletRequest request) {
