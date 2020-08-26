@@ -1,14 +1,18 @@
 package core.nmvc;
 
-import java.util.Map;
+import com.google.common.collect.Maps;
+import core.annotation.RequestMapping;
+import core.annotation.RequestMethod;
+import core.mvc.Controller;
+import core.mvc.HandlerMapping;
+import org.reflections.ReflectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.Set;
 
-import com.google.common.collect.Maps;
-
-import core.annotation.RequestMethod;
-
-public class AnnotationHandlerMapping {
+public class AnnotationHandlerMapping implements HandlerMapping {
     private Object[] basePackage;
 
     private Map<HandlerKey, HandlerExecution> handlerExecutions = Maps.newHashMap();
@@ -17,8 +21,19 @@ public class AnnotationHandlerMapping {
         this.basePackage = basePackage;
     }
 
-    public void initialize() {
+    public void initMapping() {
+        ControllerScanner controllerScanner = new ControllerScanner();
+        final Map<Class<Controller>, Object> controllers = controllerScanner.getControllers();
+        for (Map.Entry<Class<Controller>, Object> classObjectEntry : controllers.entrySet()) {
+            final Set<Method> allMethods = ReflectionUtils.getAllMethods(classObjectEntry.getKey(), ReflectionUtils.withAnnotation(RequestMapping.class));
 
+            for (Method method : allMethods) {
+                final RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
+                final HandlerKey handlerKey = new HandlerKey(requestMapping.value(), requestMapping.method());
+                handlerExecutions.put(handlerKey, new HandlerExecution(classObjectEntry.getValue(), method));
+            }
+
+        }
     }
 
     public HandlerExecution getHandler(HttpServletRequest request) {
