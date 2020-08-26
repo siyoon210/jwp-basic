@@ -36,20 +36,22 @@ public class DispatcherServlet extends HttpServlet {
         ModelAndView mav;
         try {
             final Object handler = getHandler(req);
-
-            if (handler instanceof LegacyRequestMapping) {
-                mav = ((Controller) handler).execute(req, resp);
-            } else if (handler instanceof AnnotationHandlerMapping) {
-                mav = ((AnnotationHandlerMapping) handler).getHandler(req).handle(req, resp);
-            } else {
-                throw new IllegalArgumentException();
-            }
-
+            mav = execute(req, resp, handler);
             View view = mav.getView();
             view.render(mav.getModel(), req, resp);
         } catch (Throwable e) {
             logger.error("Exception : {}", e);
             throw new ServletException(e.getMessage());
+        }
+    }
+
+    private ModelAndView execute(HttpServletRequest req, HttpServletResponse resp, Object handler) throws Exception {
+        if (handler instanceof LegacyRequestMapping) {
+            return ((Controller) handler).execute(req, resp);
+        } else if (handler instanceof AnnotationHandlerMapping) {
+            return ((AnnotationHandlerMapping) handler).getHandler(req).handle(req, resp);
+        } else {
+            throw new IllegalArgumentException();
         }
     }
 
