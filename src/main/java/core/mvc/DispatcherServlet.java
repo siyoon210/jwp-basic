@@ -1,5 +1,6 @@
 package core.mvc;
 
+import com.google.common.collect.Lists;
 import core.nmvc.AnnotationHandlerMapping;
 import core.nmvc.HandlerExecution;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(name = "dispatcher", urlPatterns = "/", loadOnStartup = 1)
 public class DispatcherServlet extends HttpServlet {
@@ -19,6 +21,7 @@ public class DispatcherServlet extends HttpServlet {
 
     private LegacyRequestMapping rm;
     private AnnotationHandlerMapping am;
+    private List<HandlerAdapter> handlerAdapters = Lists.newArrayList();
 
     @Override
     public void init() throws ServletException {
@@ -26,6 +29,9 @@ public class DispatcherServlet extends HttpServlet {
         rm.initMapping();
         am = new AnnotationHandlerMapping();
         am.initMapping();
+
+        handlerAdapters.add(new ControllerHandlerAdapter());
+        handlerAdapters.add(new HandlerExecutionHandlerAdapter());
     }
 
     @Override
@@ -45,13 +51,12 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     private ModelAndView execute(HttpServletRequest req, HttpServletResponse resp, Object handler) throws Exception {
-        if (handler instanceof LegacyRequestMapping) {
-            return ((Controller) handler).execute(req, resp);
-        } else if (handler instanceof AnnotationHandlerMapping) {
-            return ((AnnotationHandlerMapping) handler).getHandler(req).handle(req, resp);
-        } else {
-            throw new IllegalArgumentException();
+        for (HandlerAdapter handlerAdapter : handlerAdapters) {
+            if (handlerAdapter.support(handler)) {
+                return handlerAdapter.execute(req, resp, handler);
+            }
         }
+        throw new IllegalStateException();
     }
 
     private Object getHandler(HttpServletRequest request) {
