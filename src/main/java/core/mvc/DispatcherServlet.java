@@ -33,10 +33,9 @@ public class DispatcherServlet extends HttpServlet {
         String requestUri = req.getRequestURI();
         logger.debug("Method : {}, Request URI : {}", req.getMethod(), requestUri);
 
-        ModelAndView mav;
         try {
             final Object handler = getHandler(req);
-            mav = execute(req, resp, handler);
+            ModelAndView mav = execute(req, resp, handler);
             View view = mav.getView();
             view.render(mav.getModel(), req, resp);
         } catch (Throwable e) {
