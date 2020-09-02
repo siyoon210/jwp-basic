@@ -3,17 +3,17 @@ package core.mvc;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import core.nmvc.HandlerAdapter;
+
 public class ControllerHandlerAdapter implements HandlerAdapter {
-    public boolean support(Object handler) {
+    @Override
+    public boolean supports(Object handler) {
         return handler instanceof Controller;
     }
 
-    public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp, Object handler) {
-        try {
-            return ((Controller) handler).execute(req, resp);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalStateException();
-        }
+    @Override
+    public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
+        return ((Controller) handler).execute(request, response);
     }
 }

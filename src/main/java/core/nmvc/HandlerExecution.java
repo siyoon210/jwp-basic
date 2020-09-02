@@ -1,14 +1,21 @@
 package core.nmvc;
 
-import core.mvc.ModelAndView;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Method;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import core.mvc.ModelAndView;
 
 public class HandlerExecution {
-    private final Object declaredObject;
-    private final Method method;
+    private static final Logger logger = LoggerFactory.getLogger(HandlerExecution.class);
+
+    private Object declaredObject;
+    private Method method;
 
     public HandlerExecution(Object declaredObject, Method method) {
         this.declaredObject = declaredObject;
@@ -16,6 +23,11 @@ public class HandlerExecution {
     }
 
     public ModelAndView handle(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return (ModelAndView) method.invoke(declaredObject, request, response);
+        try {
+            return (ModelAndView) method.invoke(declaredObject, request, response);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            logger.error("{} method invoke fail. error message : {}", method, e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 }

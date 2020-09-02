@@ -1,30 +1,40 @@
 package core.nmvc;
 
-import core.mvc.Controller;
-import org.reflections.Reflections;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Maps;
+
+import core.annotation.Controller;
+
 public class ControllerScanner {
-    private final Map<Class<Controller>, Object> controllers = new HashMap<>();
+    private static final Logger log = LoggerFactory.getLogger(ControllerScanner.class);
 
-    public ControllerScanner() {
-        final Reflections reflections = new Reflections("");
-        final Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(core.annotation.Controller.class);
+    private Reflections reflections;
 
-        annotated.forEach(a -> {
-            try {
-                controllers.put((Class<Controller>) a, a.getConstructor().newInstance());
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                e.printStackTrace();
-            }
-        });
+    public ControllerScanner(Object... basePackage) {
+        reflections = new Reflections(basePackage);
     }
 
-    public Map<Class<Controller>, Object> getControllers() {
+    public Map<Class<?>, Object> getControllers() {
+        Set<Class<?>> preInitiatedControllers = reflections.getTypesAnnotatedWith(Controller.class);
+        return instantiateControllers(preInitiatedControllers);
+    }
+
+    Map<Class<?>, Object> instantiateControllers(Set<Class<?>> preInitiatedControllers) {
+        Map<Class<?>, Object> controllers = Maps.newHashMap();
+        try {
+            for (Class<?> clazz : preInitiatedControllers) {
+                controllers.put(clazz, clazz.newInstance());
+            }
+        } catch (InstantiationException | IllegalAccessException e) {
+            log.error(e.getMessage());
+        }
+
         return controllers;
     }
 }

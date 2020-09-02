@@ -1,49 +1,24 @@
 package core.nmvc;
 
-import core.mvc.ModelAndView;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import static org.junit.Assert.assertEquals;
-
 public class AnnotationHandlerMappingTest {
     private AnnotationHandlerMapping handlerMapping;
-    private MockHttpServletResponse response;
 
     @Before
     public void setup() {
         handlerMapping = new AnnotationHandlerMapping("core.nmvc");
-        handlerMapping.initMapping();
-
-        response = new MockHttpServletResponse();
+        handlerMapping.initialize();
     }
 
     @Test
-    public void list() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/users");
+    public void getHandler() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/users/findUserId");
+        MockHttpServletResponse response = new MockHttpServletResponse();
         HandlerExecution execution = handlerMapping.getHandler(request);
-        ModelAndView mav = execution.handle(request, response);
-        mav.getView().render(mav.getModel(), request, response);
-        assertEquals("/users/list.jsp", response.getForwardedUrl());
-    }
-
-    @Test
-    public void show() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/users/show");
-        HandlerExecution execution = handlerMapping.getHandler(request);
-        ModelAndView mav = execution.handle(request, response);
-        mav.getView().render(mav.getModel(), request, response);
-        assertEquals("/users/show.jsp", response.getForwardedUrl());
-    }
-
-    @Test
-    public void create() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/users");
-        HandlerExecution execution = handlerMapping.getHandler(request);
-        ModelAndView mav = execution.handle(request, response);
-        mav.getView().render(mav.getModel(), request, response);
-        assertEquals("/users", response.getRedirectedUrl());
+        execution.handle(request, response);
     }
 }

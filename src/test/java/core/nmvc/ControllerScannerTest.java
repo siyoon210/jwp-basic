@@ -1,28 +1,27 @@
 package core.nmvc;
 
-import core.mvc.Controller;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 public class ControllerScannerTest {
-    private static final Logger logger = LoggerFactory.getLogger(MyController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerScannerTest.class);
 
-    private ControllerScanner cs;
+    private ControllerScanner cf;
 
     @Before
-    public void init() {
-        cs = new ControllerScanner();
+    public void setup() {
+        cf = new ControllerScanner("core.nmvc");
     }
 
     @Test
-    public void csTest() {
-        final Map<Class<Controller>, Object> controllers = cs.getControllers();
-        for (Class<Controller> controllerClass : controllers.keySet()) {
-            logger.debug("Controller : {}", controllerClass.getName());
+    public void getControllers() throws Exception {
+        Map<Class<?>, Object> controllers = cf.getControllers();
+        for (Class<?> controller : controllers.keySet()) {
+            logger.debug("controller : {}", controller);
         }
     }
 }
