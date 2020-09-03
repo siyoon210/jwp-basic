@@ -19,10 +19,10 @@ public class BeanScannerTest {
     }
 
     @Test
-    public void getControllers() throws Exception {
-        Map<Class<?>, Object> controllers = cf.getControllers();
-        for (Class<?> controller : controllers.keySet()) {
-            logger.debug("controller : {}", controller);
+    public void getBeans() throws Exception {
+        Map<Class<?>, Object> beans = cf.getBeans();
+        for (Class<?> bean : beans.keySet()) {
+            logger.debug("bean : {}", bean);
         }
     }
 }
