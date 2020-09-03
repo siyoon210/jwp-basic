@@ -1,20 +1,17 @@
 package core.nmvc;
 
-import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import core.annotation.RequestMapping;
+import core.annotation.RequestMethod;
 import org.reflections.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-
-import core.annotation.RequestMapping;
-import core.annotation.RequestMethod;
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.Set;
 
 public class AnnotationHandlerMapping implements HandlerMapping {
     private static final Logger logger = LoggerFactory.getLogger(AnnotationHandlerMapping.class);
@@ -46,9 +43,9 @@ public class AnnotationHandlerMapping implements HandlerMapping {
     }
 
     @SuppressWarnings("unchecked")
-    private Set<Method> getRequestMappingMethods(Set<Class<?>> controlleers) {
+    private Set<Method> getRequestMappingMethods(Set<Class<?>> controllers) {
         Set<Method> requestMappingMethods = Sets.newHashSet();
-        for (Class<?> clazz : controlleers) {
+        for (Class<?> clazz : controllers) {
             requestMappingMethods
                     .addAll(ReflectionUtils.getAllMethods(clazz, ReflectionUtils.withAnnotation(RequestMapping.class)));
         }
