@@ -33,15 +33,18 @@ public class BeanFactory {
 
     @SuppressWarnings("unchecked")
     private <T> T createBean(Class<T> beanType) {
-        if (hasBean(beanType)) {
-            getBean(beanType);
+        //인터페이스가 들어온 경우
+        final Class<?> concreteClass = BeanFactoryUtils.findConcreteClass(beanType, preInstanticateBeans);
+
+        if (hasBean(concreteClass)) {
+            getBean(concreteClass);
         }
 
         //기본생성자이거나, @Inject 명시후에 파라미터가 없는경우
-        final Constructor<?> constructor = BeanFactoryUtils.getInjectedConstructor(beanType);
+        final Constructor<?> constructor = BeanFactoryUtils.getInjectedConstructor(concreteClass);
         if (constructor == null) {
             try {
-                return beanType.getConstructor().newInstance();
+                return (T)concreteClass.getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
                 return null;
@@ -63,8 +66,8 @@ public class BeanFactory {
         }
     }
 
-    private <T> boolean hasBean(Class<T> beanType) {
-        return beans.containsKey(beanType);
+    private <T> boolean hasBean(Class<T> concreteClass) {
+        return beans.containsKey(concreteClass);
     }
 
 
