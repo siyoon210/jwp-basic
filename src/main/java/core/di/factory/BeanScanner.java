@@ -1,6 +1,5 @@
 package core.di.factory;
 
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import core.annotation.Controller;
 import core.annotation.Repository;
@@ -10,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
-import java.util.Map;
 import java.util.Set;
 
 public class BeanScanner {
@@ -23,22 +21,8 @@ public class BeanScanner {
     }
 
     @SuppressWarnings("unchecked")
-    public Map<Class<?>, Object> getBeans() {
-        Set<Class<?>> preInitiatedBeans = getTypesAnnotatedWith(Controller.class, Service.class, Repository.class);
-        return instantiateBeans(preInitiatedBeans);
-    }
-
-    Map<Class<?>, Object> instantiateBeans(Set<Class<?>> preInitiatedBeans) {
-        Map<Class<?>, Object> beans = Maps.newHashMap();
-        try {
-            for (Class<?> clazz : preInitiatedBeans) {
-                beans.put(clazz, clazz.newInstance());
-            }
-        } catch (InstantiationException | IllegalAccessException e) {
-            log.error(e.getMessage());
-        }
-
-        return beans;
+    public Set<Class<?>> scan() {
+        return getTypesAnnotatedWith(Controller.class, Service.class, Repository.class);
     }
 
     @SuppressWarnings("unchecked")

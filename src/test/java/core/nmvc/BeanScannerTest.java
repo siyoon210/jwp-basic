@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
+import java.util.Set;
 
 public class BeanScannerTest {
     private static final Logger logger = LoggerFactory.getLogger(BeanScannerTest.class);
@@ -20,9 +20,9 @@ public class BeanScannerTest {
 
     @Test
     public void getBeans() throws Exception {
-        Map<Class<?>, Object> beans = cf.getBeans();
-        for (Class<?> bean : beans.keySet()) {
-            logger.debug("bean : {}", bean);
+        final Set<Class<?>> scan = cf.scan();
+        for (Class<?> aClass : scan) {
+            logger.debug("bean : {}", aClass);
         }
     }
 }
