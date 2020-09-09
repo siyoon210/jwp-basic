@@ -1,19 +1,17 @@
 package core.di.factory;
 
-import com.google.common.collect.Sets;
-import core.annotation.Controller;
-import core.annotation.Repository;
-import core.annotation.Service;
-import org.reflections.Reflections;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-public class BeanScanner {
-    private static final Logger log = LoggerFactory.getLogger(BeanScanner.class);
+import org.reflections.Reflections;
 
+import com.google.common.collect.Sets;
+
+import core.annotation.Controller;
+import core.annotation.Repository;
+import core.annotation.Service;
+
+public class BeanScanner {
     private Reflections reflections;
 
     public BeanScanner(Object... basePackage) {
@@ -27,10 +25,10 @@ public class BeanScanner {
 
     @SuppressWarnings("unchecked")
     private Set<Class<?>> getTypesAnnotatedWith(Class<? extends Annotation>... annotations) {
-        Set<Class<?>> beans = Sets.newHashSet();
+        Set<Class<?>> preInstantiatedBeans = Sets.newHashSet();
         for (Class<? extends Annotation> annotation : annotations) {
-            beans.addAll(reflections.getTypesAnnotatedWith(annotation));
+            preInstantiatedBeans.addAll(reflections.getTypesAnnotatedWith(annotation));
         }
-        return beans;
+        return preInstantiatedBeans;
     }
 }

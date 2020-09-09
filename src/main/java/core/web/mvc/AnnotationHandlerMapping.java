@@ -1,19 +1,22 @@
-package core.nmvc;
+package core.web.mvc;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import core.annotation.RequestMapping;
-import core.annotation.RequestMethod;
-import core.di.factory.BeanFactory;
-import core.di.factory.BeanScanner;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.reflections.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.Set;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+
+import core.annotation.RequestMapping;
+import core.annotation.RequestMethod;
+import core.di.factory.BeanFactory;
+import core.di.factory.BeanScanner;
 
 public class AnnotationHandlerMapping implements HandlerMapping {
     private static final Logger logger = LoggerFactory.getLogger(AnnotationHandlerMapping.class);
@@ -27,8 +30,9 @@ public class AnnotationHandlerMapping implements HandlerMapping {
     }
 
     public void initialize() {
-        BeanScanner beanScanner = new BeanScanner(basePackage);
-        BeanFactory beanFactory = new BeanFactory(beanScanner.scan());
+        BeanScanner scanner = new BeanScanner(basePackage);
+        BeanFactory beanFactory = new BeanFactory(scanner.scan());
+        beanFactory.initialize();
         Map<Class<?>, Object> controllers = beanFactory.getControllers();
         Set<Method> methods = getRequestMappingMethods(controllers.keySet());
         for (Method method : methods) {
@@ -46,9 +50,9 @@ public class AnnotationHandlerMapping implements HandlerMapping {
     }
 
     @SuppressWarnings("unchecked")
-    private Set<Method> getRequestMappingMethods(Set<Class<?>> controllers) {
+    private Set<Method> getRequestMappingMethods(Set<Class<?>> controlleers) {
         Set<Method> requestMappingMethods = Sets.newHashSet();
-        for (Class<?> clazz : controllers) {
+        for (Class<?> clazz : controlleers) {
             requestMappingMethods
                     .addAll(ReflectionUtils.getAllMethods(clazz, ReflectionUtils.withAnnotation(RequestMapping.class)));
         }

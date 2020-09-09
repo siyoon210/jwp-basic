@@ -1,19 +1,21 @@
-package core.nmvc;
+package core.web.mvc;
 
+import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import core.mvc.ModelAndView;
+import core.web.view.ModelAndView;
 
-public class HandlerExecutionHandlerAdapter implements HandlerAdapter {
+public class ServletHandlerAdapter implements HandlerAdapter {
     @Override
     public boolean supports(Object handler) {
-        return handler instanceof HandlerExecution;
+        return (handler instanceof Servlet);
     }
 
     @Override
     public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        return ((HandlerExecution) handler).handle(request, response);
+        ((Servlet) handler).service(request, response);
+        return null;
     }
 }
