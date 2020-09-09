@@ -1,18 +1,16 @@
 package core.di.factory;
 
-import java.lang.reflect.Constructor;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import core.annotation.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
-import core.annotation.Controller;
+import java.lang.reflect.Constructor;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class BeanFactory {
     private static final Logger logger = LoggerFactory.getLogger(BeanFactory.class);
@@ -84,5 +82,9 @@ public class BeanFactory {
             }
         }
         return controllers;
+    }
+
+    public Class<?> findConcreteClass(Class<?> clazz) {
+        return BeanFactoryUtils.findConcreteClass(clazz, preInstanticateBeans);
     }
 }
