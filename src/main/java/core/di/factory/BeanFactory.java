@@ -49,8 +49,9 @@ public class BeanFactory {
         //인터페이스가 들어온 경우
         final Class<?> concreteClass = BeanFactoryUtils.findConcreteClass(beanType, preInstanticateBeans);
 
+        // 재귀는 기반타입을 설정하는 것이 가장 중요하다. (종료조건)
         if (hasBean(concreteClass)) {
-            getBean(concreteClass);
+            return (T) getBean(concreteClass);
         }
 
         //기본생성자이거나, @Inject 명시후에 파라미터가 없는경우
