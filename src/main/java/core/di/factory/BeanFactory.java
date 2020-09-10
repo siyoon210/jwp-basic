@@ -44,8 +44,7 @@ public class BeanFactory {
 //        if (bean != null) {
 //            return bean;
 //        }
-
-
+//
 //        Constructor<?> injectedConstructor = BeanFactoryUtils.getInjectedConstructor(clazz);
 //        if (injectedConstructor == null) {
 //            bean = BeanUtils.instantiate(clazz);
@@ -58,7 +57,7 @@ public class BeanFactory {
 //        beans.put(clazz, bean);
 //        return bean;
 //    }
-
+//
 //    private Object instantiateConstructor(Constructor<?> constructor) {
 //        Class<?>[] pTypes = constructor.getParameterTypes();
 //        List<Object> args = Lists.newArrayList();

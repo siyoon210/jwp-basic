@@ -4,13 +4,12 @@ import com.google.common.collect.Lists;
 import core.di.factory.BeanFactoryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static org.springframework.beans.BeanUtils.instantiateClass;
 
 public class ConstructorDependencyInjector implements DependencyInjector {
     private static final Logger logger = LoggerFactory.getLogger(ConstructorDependencyInjector.class);
@@ -25,20 +24,27 @@ public class ConstructorDependencyInjector implements DependencyInjector {
 
     @Override
     public void inject(Class<?> clazz) {
+        instantiateClass(clazz);
+    }
+
+    private Object instantiateClass(Class<?> clazz) {
         Object bean = beans.get(clazz);
         if (bean != null) {
-            return;
+            return bean;
         }
 
         Constructor<?> injectedConstructor = BeanFactoryUtils.getInjectedConstructor(clazz);
         if (injectedConstructor == null) {
-            return;
+            bean = BeanUtils.instantiate(clazz);
+            beans.put(clazz, bean);
+            return bean;
         }
 
         logger.debug("Constructor : {}", injectedConstructor);
 
         bean = instantiateConstructor(injectedConstructor);
         beans.put(clazz, bean);
+        return bean;
     }
 
     private Object instantiateConstructor(Constructor<?> constructor) {
@@ -56,6 +62,6 @@ public class ConstructorDependencyInjector implements DependencyInjector {
             }
             args.add(bean);
         }
-        return instantiateClass(constructor, args.toArray());
+        return BeanUtils.instantiateClass(constructor, args.toArray());
     }
 }
