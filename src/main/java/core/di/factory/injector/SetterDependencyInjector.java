@@ -11,12 +11,12 @@ import java.util.Set;
 
 import static org.springframework.beans.BeanUtils.instantiateClass;
 
-public class SetterInjector implements Injector {
-    private static final Logger logger = LoggerFactory.getLogger(SetterInjector.class);
+public class SetterDependencyInjector implements DependencyInjector {
+    private static final Logger logger = LoggerFactory.getLogger(SetterDependencyInjector.class);
 
     private final BeanFactory beanFactory;
 
-    public SetterInjector(BeanFactory beanFactory) {
+    public SetterDependencyInjector(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 

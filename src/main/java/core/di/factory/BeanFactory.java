@@ -1,14 +1,12 @@
 package core.di.factory;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import core.annotation.Controller;
+import core.di.factory.injector.ConstructorDependencyInjector;
+import core.di.factory.injector.DependencyInjector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 
-import java.lang.reflect.Constructor;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,8 +17,11 @@ public class BeanFactory {
 
     private Map<Class<?>, Object> beans = Maps.newHashMap();
 
+    private DependencyInjector injectors;
+
     public BeanFactory(Set<Class<?>> preInstanticateBeans) {
         this.preInstanticateBeans = preInstanticateBeans;
+        this.injectors = new ConstructorDependencyInjector(preInstanticateBeans, beans);
     }
 
     @SuppressWarnings("unchecked")
@@ -32,47 +33,49 @@ public class BeanFactory {
         for (Class<?> clazz : preInstanticateBeans) {
             if (beans.get(clazz) == null) {
                 logger.debug("instantiated Class : {}", clazz);
-                instantiateClass(clazz);
+                //해당 클래스의 DI를 진행하세요.
+                injectors.inject(clazz);
             }
         }
     }
 
-    private Object instantiateClass(Class<?> clazz) {
-        Object bean = beans.get(clazz);
-        if (bean != null) {
-            return bean;
-        }
+//    private Object instantiateClass(Class<?> clazz) {
+//        Object bean = beans.get(clazz);
+//        if (bean != null) {
+//            return bean;
+//        }
 
-        Constructor<?> injectedConstructor = BeanFactoryUtils.getInjectedConstructor(clazz);
-        if (injectedConstructor == null) {
-            bean = BeanUtils.instantiate(clazz);
-            beans.put(clazz, bean);
-            return bean;
-        }
 
-        logger.debug("Constructor : {}", injectedConstructor);
-        bean = instantiateConstructor(injectedConstructor);
-        beans.put(clazz, bean);
-        return bean;
-    }
+//        Constructor<?> injectedConstructor = BeanFactoryUtils.getInjectedConstructor(clazz);
+//        if (injectedConstructor == null) {
+//            bean = BeanUtils.instantiate(clazz);
+//            beans.put(clazz, bean);
+//            return bean;
+//        }
+//
+//        logger.debug("Constructor : {}", injectedConstructor);
+//        bean = instantiateConstructor(injectedConstructor);
+//        beans.put(clazz, bean);
+//        return bean;
+//    }
 
-    private Object instantiateConstructor(Constructor<?> constructor) {
-        Class<?>[] pTypes = constructor.getParameterTypes();
-        List<Object> args = Lists.newArrayList();
-        for (Class<?> clazz : pTypes) {
-            Class<?> concreteClazz = BeanFactoryUtils.findConcreteClass(clazz, preInstanticateBeans);
-            if (!preInstanticateBeans.contains(concreteClazz)) {
-                throw new IllegalStateException(clazz + "는 Bean이 아니다.");
-            }
-
-            Object bean = beans.get(concreteClazz);
-            if (bean == null) {
-                bean = instantiateClass(concreteClazz);
-            }
-            args.add(bean);
-        }
-        return BeanUtils.instantiateClass(constructor, args.toArray());
-    }
+//    private Object instantiateConstructor(Constructor<?> constructor) {
+//        Class<?>[] pTypes = constructor.getParameterTypes();
+//        List<Object> args = Lists.newArrayList();
+//        for (Class<?> clazz : pTypes) {
+//            Class<?> concreteClazz = BeanFactoryUtils.findConcreteClass(clazz, preInstanticateBeans);
+//            if (!preInstanticateBeans.contains(concreteClazz)) {
+//                throw new IllegalStateException(clazz + "는 Bean이 아니다.");
+//            }
+//
+//            Object bean = beans.get(concreteClazz);
+//            if (bean == null) {
+//                bean = instantiateClass(concreteClazz);
+//            }
+//            args.add(bean);
+//        }
+//        return BeanUtils.instantiateClass(constructor, args.toArray());
+//    }
 
     public Map<Class<?>, Object> getControllers() {
         Map<Class<?>, Object> controllers = Maps.newHashMap();

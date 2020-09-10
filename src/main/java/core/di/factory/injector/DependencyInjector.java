@@ -1,5 +1,5 @@
 package core.di.factory.injector;
 
-public interface Injector {
+public interface DependencyInjector {
     void inject(Class<?> clazz);
 }
